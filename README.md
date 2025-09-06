@@ -2,7 +2,9 @@
 <p align="center">
 <em>Giving Robots a Voice. Your Voice.</em>
 </p>
-![image info]](./logo4.jpg)
+<div align="center">
+  <img src="./logo4.jpg" alt="Logo" width="400">
+</div>
 
 Welcome to the LLM Robot Commander project! This isn't just a codebase; it's an experiment in the future of human-robot interaction. We're building a lightweight, high-performance Rust server that acts as a bridge between the boundless creativity of Large Language Models (LLMs) and the tangible actions of a physical robot.
 

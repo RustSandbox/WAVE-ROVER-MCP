@@ -37,6 +37,23 @@ impl GoForward{
 	}
 }
 #[derive(Serialize)]
+pub struct IMUData{
+	#[serde(rename = "T")]
+	command: u8,
+}
+impl IMUData{
+	pub fn new() -> Self{
+		Self{
+			command:126
+		}
+	}
+}
+
+pub fn retrieve_imu_data() ->Result<String,String>{
+	let retrieve_imu_data_command = IMUData::new();
+	command_to_robot(retrieve_imu_data_command)
+}
+#[derive(Serialize)]
 pub struct GoBackward {
 	#[serde(rename = "T")]
 	command: u8, // Always 1
@@ -83,24 +100,29 @@ impl RobotControlsServer {
 		}
 	}
 
-	#[tool(description = "command robot to move forward with a given speed")]
+	#[tool(description = "command robot to move forward with a given speed and return IMU data")]
 	async fn move_forward(&self, Parameters(Speed{speed:s}): Parameters<Speed>) -> Result<CallToolResult, ErrorData> {
 		let command=GoForward::new(s);
 		let result = command_to_robot(command);
-
-		Ok(CallToolResult::success(vec![Content::text(result.unwrap())]))
+		let imu_data = retrieve_imu_data().unwrap();
+		let return_message = format!("reaction of Robot is {:?}\n. IMU data of robot after this move forward is {:?}",
+		                             result.unwrap(), imu_data);
+		Ok(CallToolResult::success(vec![Content::text(return_message)]))
 	}
-	#[tool(description = "command robot to move backward with a given speed")]
+	#[tool(description = "command robot to move backward with a given speed and return IMU data")]
 	async fn move_backward(&self, Parameters(Speed{speed:s}): Parameters<Speed>) -> Result<CallToolResult, ErrorData> {
 		let command= GoBackward::new(s);
 		let result = command_to_robot(command);
+		let imu_data = retrieve_imu_data().unwrap();
+		let return_message = format!("reaction of Robot is {:?}\n. IMU data of robot after this move backward is {:?}",
+		                             result.unwrap(), imu_data);
 
-		Ok(CallToolResult::success(vec![Content::text(result.unwrap())]))
+		Ok(CallToolResult::success(vec![Content::text(return_message)]))
 	}
 
 	#[tool(description = "Command Robot to stop")]
 	async fn stop(&self) -> Result<CallToolResult, ErrorData> {
-		todo!()
+		Ok(CallToolResult::success(vec![Content::text(retrieve_imu_data().unwrap())]))
 	}
 }
 

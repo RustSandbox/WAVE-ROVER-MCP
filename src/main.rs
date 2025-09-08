@@ -71,12 +71,38 @@ impl GoBackward {
 		}
 	}
 }
-
+#[derive(Serialize)]
+pub struct Move{
+	#[serde(rename = "T")]
+	command: u8, // Always 1
+	#[serde(rename = "L")]
+	left_speed: f32,
+	#[serde(rename = "R")]
+	right_speed: f32,
+}
+impl Move {
+	fn new( left_speed: f32,right_speed:f32) -> Self{
+		Self{
+			command:1,
+			left_speed,
+			right_speed,
+		}
+	}
+}
 #[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
 pub struct Speed{
 	#[schemars(description = " Speed of movement of Robot")]
 	speed: f32,
 }
+
+#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+pub struct ComplexSpeed{
+	#[schemars(description = " Speed of movement of the left wheels of the Robot")]
+	left_speed: f32,
+	#[schemars(description = " Speed of movement of the right wheels of the Robot")]
+	right_speed: f32,
+}
+
 fn command_to_robot<T:Serialize>(command: T)-> Result<String,String>{
 	let json= serde_json::to_string(&command).unwrap();
 	let url = format!("http://{}/js?json={}", ROVER_IP, json);
@@ -112,6 +138,31 @@ impl RobotControlsServer {
 	#[tool(description = "command robot to move backward with a given speed and return IMU data")]
 	async fn move_backward(&self, Parameters(Speed{speed:s}): Parameters<Speed>) -> Result<CallToolResult, ErrorData> {
 		let command= GoBackward::new(s);
+		let result = command_to_robot(command);
+		let imu_data = retrieve_imu_data().unwrap();
+		let return_message = format!("reaction of Robot is {:?}\n. IMU data of robot after this move backward is {:?}",
+		                             result.unwrap(), imu_data);
+
+		Ok(CallToolResult::success(vec![Content::text(return_message)]))
+	}
+
+
+	#[tool(description = "
+   Differential drive robot controller for precise motion execution.
+
+    INPUTS:
+    - left_speed: f32 (-1.0 to 1.0) - Left wheel velocity
+    - right_speed: f32 (-1.0 to 1.0) - Right wheel velocity
+
+    BEHAVIOR:
+    - Equal speeds: Linear motion (forward if positive, reverse if negative)
+    - Differential speeds: Curved trajectory (turns toward slower wheel)
+    - Opposite signs: Rotation in place
+
+    RETURNS:
+    - IMU data structure with real-time orientation and motion telemetry	")]
+	async fn complex_move(&self, Parameters(ComplexSpeed{left_speed:l, right_speed:r }): Parameters<ComplexSpeed>) -> Result<CallToolResult, ErrorData> {
+		let command= Move::new(l,r);
 		let result = command_to_robot(command);
 		let imu_data = retrieve_imu_data().unwrap();
 		let return_message = format!("reaction of Robot is {:?}\n. IMU data of robot after this move backward is {:?}",

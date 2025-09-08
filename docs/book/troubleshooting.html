@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Common Issues - LLM Robot Commander</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to the LLM Robot Commander - bridging natural language and robotic control">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "ayu";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">LLM Robot Commander</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-username/your-repo" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/your-username/your-repo/edit/main/docs/src/troubleshooting.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="common-issues"><a class="header" href="#common-issues">Common Issues</a></h1>
+<h2 id="server-issues"><a class="header" href="#server-issues">Server Issues</a></h2>
+<h3 id="server-wont-start"><a class="header" href="#server-wont-start">Server Won’t Start</a></h3>
+<p><strong>Problem</strong>: The server executable doesn’t start or exits immediately.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check Rust installation: <code>rustc --version</code></li>
+<li>Verify executable permissions: <code>chmod +x target/release/robot-mcp</code></li>
+<li>Check for missing dependencies: <code>cargo build --release</code></li>
+<li>Look for error messages in stderr output</li>
+</ol>
+<h3 id="server-starts-but-mcp-client-cant-connect"><a class="header" href="#server-starts-but-mcp-client-cant-connect">Server Starts but MCP Client Can’t Connect</a></h3>
+<p><strong>Problem</strong>: Server runs but MCP client shows connection errors.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify the executable path in your MCP client configuration</li>
+<li>Check that the path is absolute, not relative</li>
+<li>Ensure the server executable exists and is accessible</li>
+<li>Check MCP client logs for specific error messages</li>
+</ol>
+<p><strong>Example Configuration (Claude Desktop)</strong>:</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "RobotCommandServer": {
+      "command": "/Users/your-username/projects/robot-command-mcp/target/release/robot-mcp",
+      "args": []
+    }
+  }
+}
+</code></pre>
+<h2 id="robot-communication-issues"><a class="header" href="#robot-communication-issues">Robot Communication Issues</a></h2>
+<h3 id="robot-not-responding"><a class="header" href="#robot-not-responding">Robot Not Responding</a></h3>
+<p><strong>Problem</strong>: All robot commands return “Robot not responding”.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Check Network Connection</strong>:
+<pre><code class="language-bash">ping 192.168.4.1
+</code></pre>
+</li>
+<li><strong>Verify Robot IP</strong>: Ensure robot is actually at <code>192.168.4.1</code></li>
+<li><strong>Test Robot API Directly</strong>:
+<pre><code class="language-bash">curl "http://192.168.4.1/js?json=%7B%22T%22%3A126%7D"
+</code></pre>
+</li>
+<li><strong>Check Firewall</strong>: Ensure no firewall is blocking HTTP requests</li>
+<li><strong>Verify Robot Power</strong>: Make sure robot is powered on and running</li>
+</ol>
+<h3 id="inconsistent-robot-responses"><a class="header" href="#inconsistent-robot-responses">Inconsistent Robot Responses</a></h3>
+<p><strong>Problem</strong>: Robot sometimes responds, sometimes doesn’t.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Check WiFi Signal Strength</strong>: Poor connection can cause timeouts</li>
+<li><strong>Verify Robot Firmware</strong>: Ensure robot API is stable</li>
+<li><strong>Check Network Load</strong>: Heavy network traffic can cause delays</li>
+<li><strong>Monitor Robot Logs</strong>: If available, check robot-side error logs</li>
+</ol>
+<h3 id="invalid-imu-data"><a class="header" href="#invalid-imu-data">Invalid IMU Data</a></h3>
+<p><strong>Problem</strong>: IMU data looks incorrect or contains NaN values.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Calibrate IMU</strong>: Many IMUs need calibration after startup</li>
+<li><strong>Check Mounting</strong>: Ensure IMU is properly mounted and oriented</li>
+<li><strong>Verify Data Format</strong>: Ensure robot returns data in expected format:
+<pre><code>accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001
+</code></pre>
+</li>
+<li><strong>Temperature Issues</strong>: IMUs can be sensitive to temperature changes</li>
+</ol>
+<h2 id="mcp-client-issues"><a class="header" href="#mcp-client-issues">MCP Client Issues</a></h2>
+<h3 id="tools-not-appearing"><a class="header" href="#tools-not-appearing">Tools Not Appearing</a></h3>
+<p><strong>Problem</strong>: MCP client doesn’t show available robot tools.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Restart MCP Client</strong>: Sometimes clients need restart after configuration changes</li>
+<li><strong>Check Server Registration</strong>: Verify server is properly registered in client config</li>
+<li><strong>Verify Tool Registration</strong>: Ensure tools are properly defined with <code>#[tool]</code> macro</li>
+<li><strong>Check Client Logs</strong>: Look for tool discovery errors</li>
+</ol>
+<h3 id="tool-calls-failing"><a class="header" href="#tool-calls-failing">Tool Calls Failing</a></h3>
+<p><strong>Problem</strong>: Tool calls return errors or don’t execute.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Parameter Validation</strong>: Ensure parameters match expected schema</li>
+<li><strong>Check Error Messages</strong>: Look at specific error returned by tool</li>
+<li><strong>Verify Speed Ranges</strong>: Ensure speed parameters are between -1.0 and 1.0</li>
+<li><strong>Network Issues</strong>: Check if robot communication is working</li>
+</ol>
+<h2 id="configuration-issues"><a class="header" href="#configuration-issues">Configuration Issues</a></h2>
+<h3 id="wrong-robot-ip-address"><a class="header" href="#wrong-robot-ip-address">Wrong Robot IP Address</a></h3>
+<p><strong>Problem</strong>: Your robot uses a different IP address than <code>192.168.4.1</code>.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Find Robot IP</strong>: Use network scanning tools to find your robot</li>
+<li><strong>Update Server Code</strong>: Modify <code>ROVER_IP</code> constant in <code>src/main.rs</code>:
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const ROVER_IP: &amp;str = "192.168.1.100"; // Your robot's IP
+<span class="boring">}</span></code></pre></pre>
+</li>
+<li><strong>Rebuild Server</strong>: <code>cargo build --release</code></li>
+<li><strong>Update Client Config</strong>: Point to new executable</li>
+</ol>
+<h3 id="path-issues"><a class="header" href="#path-issues">Path Issues</a></h3>
+<p><strong>Problem</strong>: MCP client can’t find the executable.</p>
+<p><strong>Common Path Mistakes</strong>:</p>
+<ul>
+<li>Using relative paths: <code>./target/release/robot-mcp</code> ❌</li>
+<li>Missing executable name: <code>/path/to/project/</code> ❌</li>
+<li>Wrong filename: <code>/path/to/project/target/release/robot-command</code> ❌</li>
+</ul>
+<p><strong>Correct Path Format</strong>:</p>
+<pre><code class="language-json">{
+  "command": "/Users/username/projects/robot-command-mcp/target/release/robot-mcp"
+}
+</code></pre>
+<h2 id="performance-issues"><a class="header" href="#performance-issues">Performance Issues</a></h2>
+<h3 id="slow-response-times"><a class="header" href="#slow-response-times">Slow Response Times</a></h3>
+<p><strong>Problem</strong>: Robot commands take a long time to complete.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Network Latency</strong>: Check ping times to robot</li>
+<li><strong>Robot Processing</strong>: Some robots may be slow to process commands</li>
+<li><strong>IMU Reading</strong>: IMU data retrieval might be slow</li>
+<li><strong>HTTP Timeouts</strong>: Consider adjusting reqwest timeout settings</li>
+</ol>
+<h3 id="memory-usage"><a class="header" href="#memory-usage">Memory Usage</a></h3>
+<p><strong>Problem</strong>: Server uses too much memory.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Check for Memory Leaks</strong>: Monitor memory usage over time</li>
+<li><strong>Optimize Builds</strong>: Use <code>cargo build --release</code> for production</li>
+<li><strong>Profile Code</strong>: Use tools like <code>valgrind</code> or <code>heaptrack</code></li>
+</ol>
+<h2 id="debugging-tips"><a class="header" href="#debugging-tips">Debugging Tips</a></h2>
+<h3 id="enable-detailed-logging"><a class="header" href="#enable-detailed-logging">Enable Detailed Logging</a></h3>
+<p>The server uses <code>tracing</code> for logging. To see more details:</p>
+<pre><code class="language-bash">RUST_LOG=debug ./target/release/robot-mcp
+</code></pre>
+<h3 id="test-individual-components"><a class="header" href="#test-individual-components">Test Individual Components</a></h3>
+<ol>
+<li>
+<p><strong>Test Robot API</strong>:</p>
+<pre><code class="language-bash">curl -v "http://192.168.4.1/js?json={\"T\":126}"
+</code></pre>
+</li>
+<li>
+<p><strong>Test Server Locally</strong>:</p>
+<pre><code class="language-bash">echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | ./target/release/robot-mcp
+</code></pre>
+</li>
+</ol>
+<h3 id="check-dependencies"><a class="header" href="#check-dependencies">Check Dependencies</a></h3>
+<p>Ensure all required dependencies are available:</p>
+<pre><code class="language-bash">cargo tree
+cargo check
+</code></pre>
+<h2 id="getting-help"><a class="header" href="#getting-help">Getting Help</a></h2>
+<p>If you’re still experiencing issues:</p>
+<ol>
+<li><strong>Check GitHub Issues</strong>: Look for similar problems in the project repository</li>
+<li><strong>Create Detailed Report</strong>: Include error messages, configuration, and steps to reproduce</li>
+<li><strong>Provide Environment Info</strong>: OS, Rust version, robot model, etc.</li>
+<li><strong>Test Isolation</strong>: Try to isolate whether the issue is server, client, or robot related</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="testing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="faq.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="testing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="faq.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

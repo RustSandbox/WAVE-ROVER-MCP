@@ -1,0 +1,25 @@
+[book]
+authors = ["Hamze GHALEBI"]
+language = "en"
+multilingual = false
+src = "src"
+title = "LLM Robot Commander"
+description = "A comprehensive guide to the LLM Robot Commander - bridging natural language and robotic control"
+
+[build]
+build-dir = "book"
+create-missing = true
+
+[output.html]
+default-theme = "ayu"
+preferred-dark-theme = "navy"
+smart-punctuation = true
+mathjax-support = false
+copy-fonts = true
+additional-css = []
+additional-js = []
+no-section-label = false
+git-repository-url = "https://github.com/your-username/your-repo"
+edit-url-template = "https://github.com/your-username/your-repo/edit/main/docs/{path}"
+site-url = "/LLM-Robot-Commander/"
+cname = "your-domain.com"

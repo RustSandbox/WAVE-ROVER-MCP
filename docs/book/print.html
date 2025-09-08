@@ -1,0 +1,2823 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>LLM Robot Commander</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to the LLM Robot Commander - bridging natural language and robotic control">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "ayu";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">LLM Robot Commander</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-username/your-repo" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="llm-robot-commander"><a class="header" href="#llm-robot-commander">LLM Robot Commander</a></h1>
+<p align="center">
+<em>Giving Robots a Voice. Your Voice.</em>
+</p>
+<p>Welcome to the LLM Robot Commander project! This documentation will guide you through everything you need to know about this innovative system that bridges the gap between natural language processing and robotic control.</p>
+<h2 id="what-is-llm-robot-commander"><a class="header" href="#what-is-llm-robot-commander">What is LLM Robot Commander?</a></h2>
+<p>LLM Robot Commander is a lightweight, high-performance Rust server that acts as a bridge between Large Language Models (LLMs) and physical robots. Our mission is to tear down the barriers of complex code and proprietary software, allowing anyone to command a robot using the most natural interface there is: language.</p>
+<h2 id="-the-vision-a-conversation-with-your-robot"><a class="header" href="#-the-vision-a-conversation-with-your-robot">🚀 The Vision: A Conversation with Your Robot</a></h2>
+<p>Imagine telling your rover, “Go explore the garden and let me know what you see,” and watching it happen. That’s the future we’re building. This project takes your natural language intent, translates it through an LLM into a precise command, and sends it to your robot in real-time.</p>
+<p>This server is designed to control a simple, customizable rover, turning it from a programmable machine into an intelligent partner.</p>
+<h2 id="key-features"><a class="header" href="#key-features">Key Features</a></h2>
+<ul>
+<li><strong>Intuitive Control</strong>: Command your robot with words, not code</li>
+<li><strong>Real-time Feedback</strong>: Get sensor data and status updates from your robot</li>
+<li><strong>Extensible Architecture</strong>: Easy to add new commands and capabilities</li>
+<li><strong>High Performance</strong>: Built with Rust for speed and reliability</li>
+<li><strong>MCP Protocol</strong>: Uses the Model Context Protocol for seamless LLM integration</li>
+</ul>
+<h2 id="how-it-works"><a class="header" href="#how-it-works">How It Works</a></h2>
+<p>The system creates a seamless conversation between you, the LLM, and your robot:</p>
+<ol>
+<li><strong>Command</strong>: You give a command in plain English</li>
+<li><strong>Translation</strong>: An LLM interprets your intent using the tools this server provides</li>
+<li><strong>Execution</strong>: The server sends precise JSON commands to your robot</li>
+<li><strong>Feedback</strong>: The robot reports back with sensor data and status</li>
+</ol>
+<h2 id="what-youll-learn"><a class="header" href="#what-youll-learn">What You’ll Learn</a></h2>
+<p>This documentation covers:</p>
+<ul>
+<li>Setting up and configuring the system</li>
+<li>Understanding the architecture and communication protocols</li>
+<li>Using the available robot control tools</li>
+<li>Extending the system with new capabilities</li>
+<li>Troubleshooting common issues</li>
+</ul>
+<p>Let’s get started on your journey to natural language robot control!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
+<h2 id="system-architecture"><a class="header" href="#system-architecture">System Architecture</a></h2>
+<p>The LLM Robot Commander consists of three main components:</p>
+<ol>
+<li><strong>MCP Server</strong> (This Project): A Rust-based server that implements the Model Context Protocol</li>
+<li><strong>LLM Client</strong>: Any MCP-compatible client (Claude Desktop, MLStudio, etc.)</li>
+<li><strong>Robot Hardware</strong>: A network-connected robot that accepts HTTP commands</li>
+</ol>
+<h2 id="communication-flow"><a class="header" href="#communication-flow">Communication Flow</a></h2>
+<pre><code>User Input → LLM Client → MCP Server → Robot Hardware
+                ↑                         ↓
+          Sensor Data ← MCP Server ← Robot Response
+</code></pre>
+<h2 id="-how-the-magic-happens"><a class="header" href="#-how-the-magic-happens">⚙️ How the Magic Happens</a></h2>
+<p><strong>The Spark of an Idea:</strong> You give a command in plain English, like “Drive backward at about half speed.”</p>
+<p><strong>The Interpreter:</strong> An LLM, acting as the brain, receives your command. It understands your intent and knows the robot’s capabilities by consulting the tools this server provides.</p>
+<p><strong>The Connection:</strong> The LLM selects the perfect tool for the job—in this case, <code>move_backward</code>—and extracts the necessary details, like a speed of 0.5.</p>
+<p><strong>The Message:</strong> A request is sent from the LLM’s client to our Rust server. This is where the magic is handed off to pure performance.</p>
+<p><strong>Action!:</strong> Our server instantly constructs the correct JSON command (<code>{"T":1,"L":-0.5,"R":-0.5}</code>) and beams it to the robot over the local network.</p>
+<p><strong>The Feedback Loop:</strong> After moving, the robot reports back with its sensor data (IMU). This tells the LLM not just that the action was done, but how it went.</p>
+<p><strong>Closing the Loop:</strong> The server relays this success message and the rich sensor data back to the LLM, completing the conversation and readying it for your next command.</p>
+<h2 id="benefits"><a class="header" href="#benefits">Benefits</a></h2>
+<h3 id="-why-youll-love-this-project"><a class="header" href="#-why-youll-love-this-project">✨ Why You’ll Love This Project</a></h3>
+<p><strong>Intuitive Control</strong>: Command your robot with words, not code. Unlock robotics for artists, educators, and creators.</p>
+<p><strong>See What the Robot Sees</strong>: The sensor feedback loop gives the LLM—and you—real-time context, opening the door for smarter, more adaptive behaviors.</p>
+<p><strong>Endlessly Extensible</strong>: The foundation is solid. Adding new tools for turning, gripping, or reading new sensors is straightforward and encouraged!</p>
+<h2 id="requirements"><a class="header" href="#requirements">Requirements</a></h2>
+<ul>
+<li><strong>Rust Toolchain</strong>: For building and running the server</li>
+<li><strong>Robot Hardware</strong>: A network-connected robot at <code>192.168.4.1</code></li>
+<li><strong>MCP Client</strong>: Any application that supports the Model Context Protocol</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>Before you begin, ensure you have the following installed:</p>
+<h3 id="rust-toolchain"><a class="header" href="#rust-toolchain">Rust Toolchain</a></h3>
+<p>Install Rust using rustup (the recommended way):</p>
+<pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+</code></pre>
+<p>Verify your installation:</p>
+<pre><code class="language-bash">rustc --version
+cargo --version
+</code></pre>
+<h3 id="required-dependencies"><a class="header" href="#required-dependencies">Required Dependencies</a></h3>
+<p>The project uses the following key dependencies (automatically handled by Cargo):</p>
+<ul>
+<li><code>rmcp</code>: Model Context Protocol implementation</li>
+<li><code>reqwest</code>: HTTP client for robot communication</li>
+<li><code>serde</code>: JSON serialization/deserialization</li>
+<li><code>tokio</code>: Async runtime</li>
+<li><code>tracing</code>: Logging</li>
+</ul>
+<h2 id="building-the-project"><a class="header" href="#building-the-project">Building the Project</a></h2>
+<h3 id="1-clone-the-repository"><a class="header" href="#1-clone-the-repository">1. Clone the Repository</a></h3>
+<pre><code class="language-bash">git clone https://github.com/your-username/robot-command-mcp.git
+cd robot-command-mcp
+</code></pre>
+<h3 id="2-build-the-executable"><a class="header" href="#2-build-the-executable">2. Build the Executable</a></h3>
+<p>For development builds:</p>
+<pre><code class="language-bash">cargo build
+</code></pre>
+<p>For optimized release builds:</p>
+<pre><code class="language-bash">cargo build --release
+</code></pre>
+<p>This will create the executable at:</p>
+<ul>
+<li>Development: <code>target/debug/robot-mcp</code></li>
+<li>Release: <code>target/release/robot-mcp</code></li>
+</ul>
+<h3 id="3-verify-the-build"><a class="header" href="#3-verify-the-build">3. Verify the Build</a></h3>
+<p>Test that the server starts correctly:</p>
+<pre><code class="language-bash">./target/release/robot-mcp
+</code></pre>
+<p>The server should start and wait for MCP protocol messages.</p>
+<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
+<h3 id="robot-ip-address"><a class="header" href="#robot-ip-address">Robot IP Address</a></h3>
+<p>By default, the server expects your robot to be available at <code>192.168.4.1</code>. If your robot uses a different IP address, you’ll need to modify the <code>ROVER_IP</code> constant in <code>src/main.rs</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const ROVER_IP: &amp;str = "192.168.4.1"; // Change this to your robot's IP
+<span class="boring">}</span></code></pre></pre>
+<p>Then rebuild the project:</p>
+<pre><code class="language-bash">cargo build --release
+</code></pre>
+<h3 id="environment-variables"><a class="header" href="#environment-variables">Environment Variables</a></h3>
+<p>Currently, the server uses hardcoded configuration. Future versions may support environment variable configuration.</p>
+<h2 id="troubleshooting-build-issues"><a class="header" href="#troubleshooting-build-issues">Troubleshooting Build Issues</a></h2>
+<h3 id="common-problems"><a class="header" href="#common-problems">Common Problems</a></h3>
+<p><strong>Rust not found</strong>: Ensure Rust is properly installed and <code>~/.cargo/bin</code> is in your PATH.</p>
+<p><strong>Compilation errors</strong>: Make sure you’re using a recent version of Rust:</p>
+<pre><code class="language-bash">rustup update
+</code></pre>
+<p><strong>Network dependencies</strong>: If you’re behind a corporate firewall, you may need to configure Cargo to use a proxy.</p>
+<h3 id="getting-help"><a class="header" href="#getting-help">Getting Help</a></h3>
+<p>If you encounter build issues:</p>
+<ol>
+<li>Check that you have the latest version of Rust</li>
+<li>Try cleaning and rebuilding: <code>cargo clean &amp;&amp; cargo build --release</code></li>
+<li>Check the <a href="troubleshooting.html">troubleshooting section</a> for common issues</li>
+<li>Open an issue on the project’s GitHub repository</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h1>
+<p>Get up and running with LLM Robot Commander in just a few steps!</p>
+<h2 id="step-1-build-the-server"><a class="header" href="#step-1-build-the-server">Step 1: Build the Server</a></h2>
+<pre><code class="language-bash"># Clone and build
+git clone https://github.com/your-username/robot-command-mcp.git
+cd robot-command-mcp
+cargo build --release
+</code></pre>
+<h2 id="step-2-prepare-your-robot"><a class="header" href="#step-2-prepare-your-robot">Step 2: Prepare Your Robot</a></h2>
+<p>Ensure your robot:</p>
+<ul>
+<li>Is connected to the same network</li>
+<li>Has IP address <code>192.168.4.1</code> (or modify the server configuration)</li>
+<li>Accepts HTTP requests with JSON payloads</li>
+<li>Implements the expected <a href="robot-commands.html">Robot API</a></li>
+</ul>
+<h2 id="step-3-configure-your-mcp-client"><a class="header" href="#step-3-configure-your-mcp-client">Step 3: Configure Your MCP Client</a></h2>
+<p>Add the server to your MCP client configuration. For Claude Desktop, add this to your <code>claude_desktop_config.json</code>:</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "RobotCommandServer": {
+      "command": "/path/to/your/project/target/release/robot-mcp",
+      "args": []
+    }
+  }
+}
+</code></pre>
+<p><strong>Important</strong>: Replace <code>/path/to/your/project/</code> with the absolute path to your project directory.</p>
+<h3 id="common-mcp-client-locations"><a class="header" href="#common-mcp-client-locations">Common MCP Client Locations</a></h3>
+<p><strong>Claude Desktop (macOS)</strong>:</p>
+<pre><code>~/Library/Application Support/Claude/claude_desktop_config.json
+</code></pre>
+<p><strong>Claude Desktop (Windows)</strong>:</p>
+<pre><code>%APPDATA%\Claude\claude_desktop_config.json
+</code></pre>
+<p><strong>Claude Desktop (Linux)</strong>:</p>
+<pre><code>~/.config/claude/claude_desktop_config.json
+</code></pre>
+<h2 id="step-4-test-the-connection"><a class="header" href="#step-4-test-the-connection">Step 4: Test the Connection</a></h2>
+<ol>
+<li>Start your MCP client (e.g., Claude Desktop)</li>
+<li>The server should automatically connect</li>
+<li>Try a simple command like: “Move the robot forward slowly”</li>
+</ol>
+<h2 id="example-commands"><a class="header" href="#example-commands">Example Commands</a></h2>
+<p>Once everything is connected, you can give natural language commands:</p>
+<ul>
+<li><strong>“Move forward at half speed”</strong> → Robot moves forward with speed 0.5</li>
+<li><strong>“Go backward slowly”</strong> → Robot moves backward at low speed</li>
+<li><strong>“Stop the robot”</strong> → Robot stops and returns current sensor data</li>
+<li><strong>“What are the current IMU readings?”</strong> → Returns sensor data</li>
+</ul>
+<h2 id="verification"><a class="header" href="#verification">Verification</a></h2>
+<h3 id="check-server-status"><a class="header" href="#check-server-status">Check Server Status</a></h3>
+<p>The server logs to stderr, so you should see messages like:</p>
+<pre><code>Starting Robot commander MCP server
+Service initialized, waiting for requests...
+</code></pre>
+<h3 id="test-robot-communication"><a class="header" href="#test-robot-communication">Test Robot Communication</a></h3>
+<p>You can manually test your robot’s API:</p>
+<pre><code class="language-bash"># Test forward movement
+curl "http://192.168.4.1/js?json={\"T\":1,\"L\":0.5,\"R\":0.5}"
+
+# Test IMU data retrieval
+curl "http://192.168.4.1/js?json={\"T\":126}"
+</code></pre>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<ul>
+<li>Learn more about the <a href="tools.html">available tools</a></li>
+<li>Understand the <a href="robot-communication.html">robot communication protocol</a></li>
+<li>Check out the <a href="troubleshooting.html">troubleshooting guide</a> if you run into issues</li>
+</ul>
+<h2 id="quick-troubleshooting"><a class="header" href="#quick-troubleshooting">Quick Troubleshooting</a></h2>
+<p><strong>Server won’t start</strong>: Check that the executable has the right permissions and Rust dependencies are installed.</p>
+<p><strong>Robot not responding</strong>: Verify the robot’s IP address and that it’s on the same network.</p>
+<p><strong>MCP client can’t connect</strong>: Ensure the path in your client configuration points to the correct executable location.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="system-design"><a class="header" href="#system-design">System Design</a></h1>
+<h2 id="architecture-overview"><a class="header" href="#architecture-overview">Architecture Overview</a></h2>
+<p>The LLM Robot Commander follows a three-tier architecture designed for simplicity, performance, and extensibility:</p>
+<pre><code>┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   LLM Client    │    │   MCP Server     │    │  Robot Hardware │
+│  (Claude, etc.) │◄──►│  (This Project)  │◄──►│  (HTTP API)     │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+</code></pre>
+<h2 id="component-breakdown"><a class="header" href="#component-breakdown">Component Breakdown</a></h2>
+<h3 id="1-mcp-server-core-component"><a class="header" href="#1-mcp-server-core-component">1. MCP Server (Core Component)</a></h3>
+<p><strong>Technology</strong>: Rust with async/await
+<strong>Responsibilities</strong>:</p>
+<ul>
+<li>Implements Model Context Protocol (MCP)</li>
+<li>Provides tool interfaces for robot control</li>
+<li>Handles HTTP communication with robot hardware</li>
+<li>Manages sensor data collection and reporting</li>
+<li>Error handling and logging</li>
+</ul>
+<p><strong>Key Modules</strong>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Tool definitions and handlers
+#[tool_router]
+impl RobotControlsServer {
+    #[tool(description = "command robot to move forward with a given speed")]
+    async fn move_forward(&amp;self, ...) -&gt; Result&lt;CallToolResult, ErrorData&gt;
+    
+    #[tool(description = "command robot to move backward with a given speed")]
+    async fn move_backward(&amp;self, ...) -&gt; Result&lt;CallToolResult, ErrorData&gt;
+    
+    #[tool(description = "Command Robot to stop")]
+    async fn stop(&amp;self) -&gt; Result&lt;CallToolResult, ErrorData&gt;
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-llm-client"><a class="header" href="#2-llm-client">2. LLM Client</a></h3>
+<p><strong>Examples</strong>: Claude Desktop, MLStudio, or any MCP-compatible client
+<strong>Responsibilities</strong>:</p>
+<ul>
+<li>Natural language processing and understanding</li>
+<li>Tool selection based on user intent</li>
+<li>Parameter extraction and validation</li>
+<li>Result presentation to the user</li>
+</ul>
+<h3 id="3-robot-hardware"><a class="header" href="#3-robot-hardware">3. Robot Hardware</a></h3>
+<p><strong>Interface</strong>: HTTP REST API
+<strong>Expected Location</strong>: <code>192.168.4.1</code>
+<strong>Responsibilities</strong>:</p>
+<ul>
+<li>Physical movement execution</li>
+<li>Sensor data collection (IMU)</li>
+<li>Status reporting</li>
+</ul>
+<h2 id="data-flow"><a class="header" href="#data-flow">Data Flow</a></h2>
+<h3 id="command-execution-flow"><a class="header" href="#command-execution-flow">Command Execution Flow</a></h3>
+<ol>
+<li><strong>User Input</strong>: Natural language command</li>
+<li><strong>LLM Processing</strong>: Intent recognition and tool selection</li>
+<li><strong>MCP Call</strong>: Tool invocation with parameters</li>
+<li><strong>JSON Generation</strong>: Server creates robot-specific command</li>
+<li><strong>HTTP Request</strong>: Command sent to robot</li>
+<li><strong>Robot Execution</strong>: Physical action performed</li>
+<li><strong>Sensor Retrieval</strong>: IMU data collected</li>
+<li><strong>Response Assembly</strong>: Status and sensor data combined</li>
+<li><strong>Result Return</strong>: Information sent back to LLM</li>
+<li><strong>User Presentation</strong>: Natural language response</li>
+</ol>
+<h3 id="example-data-transformation"><a class="header" href="#example-data-transformation">Example Data Transformation</a></h3>
+<pre><code>"Move forward slowly" → 
+move_forward(speed: 0.3) → 
+{"T":1,"L":0.3,"R":0.3} → 
+HTTP GET to robot → 
+Robot response + IMU data → 
+"Robot moved forward successfully. Current IMU reading: ..."
+</code></pre>
+<h2 id="design-patterns"><a class="header" href="#design-patterns">Design Patterns</a></h2>
+<h3 id="tool-pattern"><a class="header" href="#tool-pattern">Tool Pattern</a></h3>
+<p>Each robot capability is exposed as an MCP tool:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tool(description = "...")]
+async fn tool_name(&amp;self, parameters: Parameters&lt;InputType&gt;) 
+    -&gt; Result&lt;CallToolResult, ErrorData&gt;
+<span class="boring">}</span></code></pre></pre>
+<p>Benefits:</p>
+<ul>
+<li>Clear separation of concerns</li>
+<li>Easy to add new capabilities</li>
+<li>Automatic parameter validation</li>
+<li>Consistent error handling</li>
+</ul>
+<h3 id="command-pattern"><a class="header" href="#command-pattern">Command Pattern</a></h3>
+<p>Robot commands are structured as serializable data:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Serialize)]
+pub struct GoForward {
+    #[serde(rename = "T")]
+    command: u8,
+    #[serde(rename = "L")]
+    left_speed: f32,
+    #[serde(rename = "R")]
+    right_speed: f32,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Benefits:</p>
+<ul>
+<li>Type safety</li>
+<li>Consistent serialization</li>
+<li>Easy to extend with new command types</li>
+</ul>
+<h3 id="feedback-loop-pattern"><a class="header" href="#feedback-loop-pattern">Feedback Loop Pattern</a></h3>
+<p>Every action includes sensor data retrieval:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let result = command_to_robot(command);
+let imu_data = retrieve_imu_data().unwrap();
+let return_message = format!("reaction: {:?}\nIMU data: {:?}", result, imu_data);
+<span class="boring">}</span></code></pre></pre>
+<p>Benefits:</p>
+<ul>
+<li>Rich context for LLM decision-making</li>
+<li>Real-time robot status awareness</li>
+<li>Enhanced user feedback</li>
+</ul>
+<h2 id="error-handling"><a class="header" href="#error-handling">Error Handling</a></h2>
+<p>The system implements multiple layers of error handling:</p>
+<ol>
+<li><strong>Network Level</strong>: HTTP request failures</li>
+<li><strong>Protocol Level</strong>: Invalid JSON responses</li>
+<li><strong>Application Level</strong>: Robot command failures</li>
+<li><strong>MCP Level</strong>: Tool execution errors</li>
+</ol>
+<h2 id="scalability-considerations"><a class="header" href="#scalability-considerations">Scalability Considerations</a></h2>
+<h3 id="current-limitations"><a class="header" href="#current-limitations">Current Limitations</a></h3>
+<ul>
+<li>Single robot support (hardcoded IP)</li>
+<li>Synchronous robot communication</li>
+<li>Basic sensor data (IMU only)</li>
+</ul>
+<h3 id="extension-points"><a class="header" href="#extension-points">Extension Points</a></h3>
+<ul>
+<li>Multiple robot support</li>
+<li>Async robot communication</li>
+<li>Additional sensor types</li>
+<li>Complex command sequences</li>
+<li>State persistence</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mcp-protocol"><a class="header" href="#mcp-protocol">MCP Protocol</a></h1>
+<p>The Model Context Protocol (MCP) is the communication standard used between the LLM client and our robot command server.</p>
+<h2 id="what-is-mcp"><a class="header" href="#what-is-mcp">What is MCP?</a></h2>
+<p>MCP enables LLM applications to securely access external tools and data sources. It provides:</p>
+<ul>
+<li><strong>Standardized Communication</strong>: Consistent message format across all tools</li>
+<li><strong>Security</strong>: Controlled access to external resources</li>
+<li><strong>Extensibility</strong>: Easy addition of new capabilities</li>
+<li><strong>Type Safety</strong>: Well-defined schemas for all interactions</li>
+</ul>
+<h2 id="server-implementation"><a class="header" href="#server-implementation">Server Implementation</a></h2>
+<p>Our robot server implements the MCP server specification:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tool_handler]
+impl ServerHandler for RobotControlsServer {
+    fn get_info(&amp;self) -&gt; ServerInfo {
+        ServerInfo {
+            protocol_version: ProtocolVersion::V_2024_11_05,
+            capabilities: ServerCapabilities::builder().enable_tools().build(),
+            server_info: Implementation::from_build_env(),
+            instructions: Some("this server allow command robot to move forward or stop".to_string()),
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="protocol-messages"><a class="header" href="#protocol-messages">Protocol Messages</a></h2>
+<h3 id="server-info-request"><a class="header" href="#server-info-request">Server Info Request</a></h3>
+<p>When a client connects, it requests server information:</p>
+<pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "initialize",
+  "params": {
+    "protocolVersion": "2024-11-05",
+    "capabilities": {},
+    "clientInfo": {
+      "name": "Claude",
+      "version": "1.0"
+    }
+  }
+}
+</code></pre>
+<h3 id="server-info-response"><a class="header" href="#server-info-response">Server Info Response</a></h3>
+<p>The server responds with its capabilities:</p>
+<pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "protocolVersion": "2024-11-05",
+    "capabilities": {
+      "tools": {}
+    },
+    "serverInfo": {
+      "name": "robot-mcp",
+      "version": "0.1.0"
+    },
+    "instructions": "this server allow command robot to move forward or stop"
+  }
+}
+</code></pre>
+<h3 id="tools-list-request"><a class="header" href="#tools-list-request">Tools List Request</a></h3>
+<p>Client requests available tools:</p>
+<pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/list"
+}
+</code></pre>
+<h3 id="tools-list-response"><a class="header" href="#tools-list-response">Tools List Response</a></h3>
+<p>Server provides tool definitions:</p>
+<pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": {
+    "tools": [
+      {
+        "name": "move_forward",
+        "description": "command robot to move forward with a given speed and return IMU data",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "speed": {
+              "type": "number",
+              "description": "Speed of movement of Robot"
+            }
+          },
+          "required": ["speed"]
+        }
+      },
+      {
+        "name": "move_backward",
+        "description": "command robot to move backward with a given speed and return IMU data",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "speed": {
+              "type": "number",
+              "description": "Speed of movement of Robot"
+            }
+          },
+          "required": ["speed"]
+        }
+      },
+      {
+        "name": "stop",
+        "description": "Command Robot to stop",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="tool-call-request"><a class="header" href="#tool-call-request">Tool Call Request</a></h3>
+<p>Client calls a specific tool:</p>
+<pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "tools/call",
+  "params": {
+    "name": "move_forward",
+    "arguments": {
+      "speed": 0.5
+    }
+  }
+}
+</code></pre>
+<h3 id="tool-call-response"><a class="header" href="#tool-call-response">Tool Call Response</a></h3>
+<p>Server returns execution results:</p>
+<pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "reaction of Robot is \"OK\"\\n. IMU data of robot after this move forward is \"accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001\""
+      }
+    ],
+    "isError": false
+  }
+}
+</code></pre>
+<h2 id="tool-definition-macros"><a class="header" href="#tool-definition-macros">Tool Definition Macros</a></h2>
+<p>The server uses Rust macros to automatically generate MCP-compliant tool definitions:</p>
+<h3 id="tool-router-macro"><a class="header" href="#tool-router-macro">Tool Router Macro</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tool_router]
+impl RobotControlsServer {
+    // Automatically generates tool registry and routing
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="tool-definition-macro"><a class="header" href="#tool-definition-macro">Tool Definition Macro</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tool(description = "command robot to move forward with a given speed and return IMU data")]
+async fn move_forward(&amp;self, Parameters(Speed{speed:s}): Parameters&lt;Speed&gt;) 
+    -&gt; Result&lt;CallToolResult, ErrorData&gt; {
+    // Tool implementation
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="parameter-schema-generation"><a class="header" href="#parameter-schema-generation">Parameter Schema Generation</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+pub struct Speed {
+    #[schemars(description = " Speed of movement of Robot")]
+    speed: f32,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The <code>JsonSchema</code> derive automatically generates the JSON schema for tool parameters.</p>
+<h2 id="transport-layer"><a class="header" href="#transport-layer">Transport Layer</a></h2>
+<p>The server uses standard I/O (stdin/stdout) for communication:</p>
+<pre><pre class="playground"><code class="language-rust">#[tokio::main]
+async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    let server = RobotControlsServer::new();
+    let _service = server.serve(stdio()).await?;
+    tokio::signal::ctrl_c().await?;
+    Ok(())
+}</code></pre></pre>
+<p>This allows the server to work with any MCP client that can launch processes and communicate via stdin/stdout.</p>
+<h2 id="error-handling-1"><a class="header" href="#error-handling-1">Error Handling</a></h2>
+<p>MCP defines standard error responses:</p>
+<pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "error": {
+    "code": -32000,
+    "message": "Robot not responding",
+    "data": {
+      "type": "INTERNAL_ERROR"
+    }
+  }
+}
+</code></pre>
+<p>The server maps internal errors to appropriate MCP error codes for proper client handling.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="robot-communication"><a class="header" href="#robot-communication">Robot Communication</a></h1>
+<p>This document explains the low-level communication between the MCP server and robot hardware.</p>
+<h2 id="communication-stack"><a class="header" href="#communication-stack">Communication Stack</a></h2>
+<pre><code>MCP Server (Rust)
+       ↓
+HTTP Client (reqwest)
+       ↓
+Network (WiFi/Ethernet)
+       ↓
+Robot HTTP Server
+       ↓
+Robot Firmware
+       ↓
+Hardware (Motors/Sensors)
+</code></pre>
+<h2 id="network-configuration"><a class="header" href="#network-configuration">Network Configuration</a></h2>
+<h3 id="default-setup"><a class="header" href="#default-setup">Default Setup</a></h3>
+<ul>
+<li><strong>Robot IP</strong>: <code>192.168.4.1</code></li>
+<li><strong>Protocol</strong>: HTTP (port 80)</li>
+<li><strong>Method</strong>: GET requests</li>
+<li><strong>Format</strong>: JSON in query parameter</li>
+</ul>
+<h3 id="alternative-configurations"><a class="header" href="#alternative-configurations">Alternative Configurations</a></h3>
+<p>If your robot uses a different setup, you’ll need to modify the server code:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Change IP address
+const ROVER_IP: &amp;str = "192.168.1.100";
+
+// For different ports
+let url = format!("http://{}:8080/api?json={}", ROVER_IP, json);
+
+// For POST requests (requires code changes)
+let client = reqwest::Client::new();
+let response = client.post(&amp;url).json(&amp;command).send().await?;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="http-request-format"><a class="header" href="#http-request-format">HTTP Request Format</a></h2>
+<h3 id="url-structure"><a class="header" href="#url-structure">URL Structure</a></h3>
+<pre><code>http://192.168.4.1/js?json={ENCODED_JSON}
+</code></pre>
+<h3 id="example-request"><a class="header" href="#example-request">Example Request</a></h3>
+<pre><code class="language-http">GET /js?json=%7B%22T%22%3A1%2C%22L%22%3A0.5%2C%22R%22%3A0.5%7D HTTP/1.1
+Host: 192.168.4.1
+User-Agent: reqwest/0.11.22
+</code></pre>
+<p>The JSON <code>{"T":1,"L":0.5,"R":0.5}</code> is URL-encoded as <code>%7B%22T%22%3A1%2C%22L%22%3A0.5%2C%22R%22%3A0.5%7D</code>.</p>
+<h2 id="error-handling-2"><a class="header" href="#error-handling-2">Error Handling</a></h2>
+<h3 id="network-level-errors"><a class="header" href="#network-level-errors">Network-Level Errors</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>match reqwest::blocking::get(&amp;url) {
+    Ok(response) =&gt; {
+        match response.text() {
+            Ok(text) =&gt; text,
+            Err(_) =&gt; "Invalid response format".to_string()
+        }
+    },
+    Err(e) =&gt; {
+        // Connection timeout, DNS resolution failure, etc.
+        format!("Network error: {}", e)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="common-error-conditions"><a class="header" href="#common-error-conditions">Common Error Conditions</a></h3>
+<ol>
+<li><strong>Connection Refused</strong>: Robot is off or not listening on port 80</li>
+<li><strong>Timeout</strong>: Robot is slow to respond or network issues</li>
+<li><strong>DNS Resolution</strong>: IP address is incorrect</li>
+<li><strong>Invalid Response</strong>: Robot returns non-text data</li>
+</ol>
+<h2 id="response-handling"><a class="header" href="#response-handling">Response Handling</a></h2>
+<h3 id="successful-movement-command"><a class="header" href="#successful-movement-command">Successful Movement Command</a></h3>
+<pre><code>Request:  {"T":1,"L":0.8,"R":0.8}
+Response: "OK"
+</code></pre>
+<h3 id="successful-imu-request"><a class="header" href="#successful-imu-request">Successful IMU Request</a></h3>
+<pre><code>Request:  {"T":126}
+Response: "accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001"
+</code></pre>
+<h3 id="error-responses"><a class="header" href="#error-responses">Error Responses</a></h3>
+<pre><code>Request:  {"T":1,"L":2.0,"R":2.0}  // Invalid speed
+Response: "Error: Speed out of range"
+</code></pre>
+<h2 id="performance-considerations"><a class="header" href="#performance-considerations">Performance Considerations</a></h2>
+<h3 id="request-timing"><a class="header" href="#request-timing">Request Timing</a></h3>
+<p>The current implementation uses blocking HTTP requests:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Synchronous - blocks until response
+let response = reqwest::blocking::get(&amp;url)?;
+<span class="boring">}</span></code></pre></pre>
+<p>For better performance, consider async requests:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Asynchronous - non-blocking
+let response = reqwest::get(&amp;url).await?;
+<span class="boring">}</span></code></pre></pre>
+<h3 id="timeout-configuration"><a class="header" href="#timeout-configuration">Timeout Configuration</a></h3>
+<p>Default timeouts can be configured:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let client = reqwest::Client::builder()
+    .timeout(Duration::from_secs(5))
+    .build()?;
+<span class="boring">}</span></code></pre></pre>
+<h3 id="connection-pooling"><a class="header" href="#connection-pooling">Connection Pooling</a></h3>
+<p>For frequent requests, connection reuse helps performance:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>static CLIENT: Lazy&lt;reqwest::Client&gt; = Lazy::new(|| {
+    reqwest::Client::builder()
+        .timeout(Duration::from_secs(5))
+        .pool_max_idle_per_host(10)
+        .build()
+        .expect("Failed to create HTTP client")
+});
+<span class="boring">}</span></code></pre></pre>
+<h2 id="security-considerations"><a class="header" href="#security-considerations">Security Considerations</a></h2>
+<h3 id="network-security"><a class="header" href="#network-security">Network Security</a></h3>
+<ul>
+<li>Robot operates on local network (192.168.x.x)</li>
+<li>No authentication currently implemented</li>
+<li>HTTP (not HTTPS) - suitable for local networks only</li>
+</ul>
+<h3 id="access-control"><a class="header" href="#access-control">Access Control</a></h3>
+<ul>
+<li>Any device on the network can control the robot</li>
+<li>Consider implementing authentication for production use</li>
+<li>Rate limiting may be needed for busy networks</li>
+</ul>
+<h2 id="robot-firmware-requirements"><a class="header" href="#robot-firmware-requirements">Robot Firmware Requirements</a></h2>
+<p>Your robot must implement:</p>
+<h3 id="http-server"><a class="header" href="#http-server">HTTP Server</a></h3>
+<pre><code class="language-c">// Example server setup (pseudo-code)
+void setup() {
+    WiFi.begin("network", "password");
+    server.on("/js", handleCommand);
+    server.begin();
+}
+
+void handleCommand() {
+    String json = server.arg("json");
+    // Parse and execute command
+    server.send(200, "text/plain", "OK");
+}
+</code></pre>
+<h3 id="json-parsing"><a class="header" href="#json-parsing">JSON Parsing</a></h3>
+<pre><code class="language-c">void parseCommand(String json) {
+    JSONVar command = JSON.parse(json);
+    
+    int type = command["T"];
+    if (type == 1) {
+        float left = command["L"];
+        float right = command["R"];
+        setMotorSpeeds(left, right);
+    } else if (type == 126) {
+        sendIMUData();
+    }
+}
+</code></pre>
+<h3 id="imu-data-format"><a class="header" href="#imu-data-format">IMU Data Format</a></h3>
+<pre><code class="language-c">void sendIMUData() {
+    float ax, ay, az, gx, gy, gz;
+    readIMU(&amp;ax, &amp;ay, &amp;az, &amp;gx, &amp;gy, &amp;gz);
+    
+    String response = "accel_x:" + String(ax, 2) +
+                     ",accel_y:" + String(ay, 2) +
+                     ",accel_z:" + String(az, 2) +
+                     ",gyro_x:" + String(gx, 3) +
+                     ",gyro_y:" + String(gy, 3) +
+                     ",gyro_z:" + String(gz, 3);
+    
+    server.send(200, "text/plain", response);
+}
+</code></pre>
+<h2 id="testing-communication"><a class="header" href="#testing-communication">Testing Communication</a></h2>
+<h3 id="manual-testing"><a class="header" href="#manual-testing">Manual Testing</a></h3>
+<pre><code class="language-bash"># Test robot connection
+ping 192.168.4.1
+
+# Test API endpoint
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A126%7D"
+
+# Test with verbose output
+curl -v "http://192.168.4.1/js?json=%7B%22T%22%3A1%2C%22L%22%3A0.5%2C%22R%22%3A0.5%7D"
+</code></pre>
+<h3 id="network-debugging"><a class="header" href="#network-debugging">Network Debugging</a></h3>
+<pre><code class="language-bash"># Check if port 80 is open
+nmap -p 80 192.168.4.1
+
+# Monitor network traffic
+tcpdump -i en0 host 192.168.4.1
+
+# Check routing
+traceroute 192.168.4.1
+</code></pre>
+<h3 id="robot-side-debugging"><a class="header" href="#robot-side-debugging">Robot-Side Debugging</a></h3>
+<ul>
+<li>Enable debug logging in robot firmware</li>
+<li>Monitor serial output during commands</li>
+<li>Check WiFi signal strength</li>
+<li>Verify power supply stability during movement</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="available-tools"><a class="header" href="#available-tools">Available Tools</a></h1>
+<p>The LLM Robot Commander provides three main tools for robot control. Each tool is designed to be intuitive for LLM clients to understand and use.</p>
+<h2 id="tool-overview"><a class="header" href="#tool-overview">Tool Overview</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Tool Name</th><th>Purpose</th><th>Parameters</th><th>Returns</th></tr></thead><tbody>
+<tr><td><code>move_forward</code></td><td>Move robot forward</td><td><code>speed: f32</code></td><td>Status + IMU data</td></tr>
+<tr><td><code>move_backward</code></td><td>Move robot backward</td><td><code>speed: f32</code></td><td>Status + IMU data</td></tr>
+<tr><td><code>stop</code></td><td>Stop robot movement</td><td>None</td><td>IMU data</td></tr>
+</tbody></table>
+</div>
+<h2 id="move_forward"><a class="header" href="#move_forward">move_forward</a></h2>
+<p>Move the robot forward at a specified speed.</p>
+<h3 id="parameters"><a class="header" href="#parameters">Parameters</a></h3>
+<ul>
+<li><strong>speed</strong> (<code>f32</code>): Speed of movement (0.0 to 1.0)
+<ul>
+<li><code>0.0</code>: No movement</li>
+<li><code>0.5</code>: Half speed</li>
+<li><code>1.0</code>: Full speed</li>
+</ul>
+</li>
+</ul>
+<h3 id="example-usage"><a class="header" href="#example-usage">Example Usage</a></h3>
+<pre><code class="language-json">{
+  "method": "tools/call",
+  "params": {
+    "name": "move_forward",
+    "arguments": {
+      "speed": 0.7
+    }
+  }
+}
+</code></pre>
+<h3 id="generated-robot-command"><a class="header" href="#generated-robot-command">Generated Robot Command</a></h3>
+<pre><code class="language-json">{
+  "T": 1,
+  "L": 0.7,
+  "R": 0.7
+}
+</code></pre>
+<h3 id="response-format"><a class="header" href="#response-format">Response Format</a></h3>
+<pre><code>reaction of Robot is "OK"
+. IMU data of robot after this move forward is "accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001"
+</code></pre>
+<h2 id="move_backward"><a class="header" href="#move_backward">move_backward</a></h2>
+<p>Move the robot backward at a specified speed.</p>
+<h3 id="parameters-1"><a class="header" href="#parameters-1">Parameters</a></h3>
+<ul>
+<li><strong>speed</strong> (<code>f32</code>): Speed of movement (0.0 to 1.0)
+<ul>
+<li>Speed is automatically converted to negative values for backward movement</li>
+</ul>
+</li>
+</ul>
+<h3 id="example-usage-1"><a class="header" href="#example-usage-1">Example Usage</a></h3>
+<pre><code class="language-json">{
+  "method": "tools/call",
+  "params": {
+    "name": "move_backward",
+    "arguments": {
+      "speed": 0.4
+    }
+  }
+}
+</code></pre>
+<h3 id="generated-robot-command-1"><a class="header" href="#generated-robot-command-1">Generated Robot Command</a></h3>
+<pre><code class="language-json">{
+  "T": 1,
+  "L": -0.4,
+  "R": -0.4
+}
+</code></pre>
+<h3 id="response-format-1"><a class="header" href="#response-format-1">Response Format</a></h3>
+<pre><code>reaction of Robot is "OK"
+. IMU data of robot after this move backward is "accel_x:-0.08,accel_y:0.03,accel_z:9.79,gyro_x:-0.01,gyro_y:0.01,gyro_z:0.002"
+</code></pre>
+<h2 id="stop"><a class="header" href="#stop">stop</a></h2>
+<p>Stop the robot and return current sensor status.</p>
+<h3 id="parameters-2"><a class="header" href="#parameters-2">Parameters</a></h3>
+<p>None required.</p>
+<h3 id="example-usage-2"><a class="header" href="#example-usage-2">Example Usage</a></h3>
+<pre><code class="language-json">{
+  "method": "tools/call",
+  "params": {
+    "name": "stop",
+    "arguments": {}
+  }
+}
+</code></pre>
+<h3 id="behavior"><a class="header" href="#behavior">Behavior</a></h3>
+<ul>
+<li>Stops current robot movement</li>
+<li>Immediately retrieves and returns IMU sensor data</li>
+<li>No explicit stop command is sent to robot (relies on natural deceleration)</li>
+</ul>
+<h3 id="response-format-2"><a class="header" href="#response-format-2">Response Format</a></h3>
+<pre><code>accel_x:0.02,accel_y:-0.01,accel_z:9.82,gyro_x:0.00,gyro_y:0.00,gyro_z:0.00
+</code></pre>
+<h2 id="natural-language-examples"><a class="header" href="#natural-language-examples">Natural Language Examples</a></h2>
+<p>Here are examples of how an LLM might interpret natural language and select tools:</p>
+<div class="table-wrapper"><table><thead><tr><th>User Command</th><th>Tool Selected</th><th>Parameters</th></tr></thead><tbody>
+<tr><td>“Move forward slowly”</td><td><code>move_forward</code></td><td><code>speed: 0.3</code></td></tr>
+<tr><td>“Go backward at half speed”</td><td><code>move_backward</code></td><td><code>speed: 0.5</code></td></tr>
+<tr><td>“Full speed ahead!”</td><td><code>move_forward</code></td><td><code>speed: 1.0</code></td></tr>
+<tr><td>“Stop the robot”</td><td><code>stop</code></td><td>None</td></tr>
+<tr><td>“What’s the robot’s current status?”</td><td><code>stop</code></td><td>None</td></tr>
+<tr><td>“Move back a little”</td><td><code>move_backward</code></td><td><code>speed: 0.2</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="error-handling-3"><a class="header" href="#error-handling-3">Error Handling</a></h2>
+<p>All tools implement comprehensive error handling:</p>
+<h3 id="network-errors"><a class="header" href="#network-errors">Network Errors</a></h3>
+<p>If the robot is unreachable:</p>
+<pre><code>reaction of Robot is "Robot not responding"
+. IMU data of robot after this move forward is "Robot not responding"
+</code></pre>
+<h3 id="invalid-parameters"><a class="header" href="#invalid-parameters">Invalid Parameters</a></h3>
+<ul>
+<li>Speed values are clamped to valid ranges</li>
+<li>Invalid JSON is handled gracefully</li>
+<li>Missing parameters return clear error messages</li>
+</ul>
+<h2 id="tool-registration"><a class="header" href="#tool-registration">Tool Registration</a></h2>
+<p>Tools are automatically registered via the <code>#[tool_router]</code> macro:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tool_router]
+impl RobotControlsServer {
+    fn new() -&gt; Self {
+        Self {
+            tool_router: Self::tool_router(),
+        }
+    }
+    // ... tool implementations
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This ensures all tools are discoverable by MCP clients and properly documented with their descriptions and parameter schemas.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="robot-commands"><a class="header" href="#robot-commands">Robot Commands</a></h1>
+<p>This section describes the JSON command protocol used to communicate with the robot hardware.</p>
+<h2 id="protocol-overview"><a class="header" href="#protocol-overview">Protocol Overview</a></h2>
+<p>The robot accepts HTTP GET requests with JSON payloads as query parameters:</p>
+<pre><code>http://192.168.4.1/js?json={COMMAND_JSON}
+</code></pre>
+<h2 id="command-types"><a class="header" href="#command-types">Command Types</a></h2>
+<h3 id="movement-commands-t-1"><a class="header" href="#movement-commands-t-1">Movement Commands (T: 1)</a></h3>
+<p>Control robot movement using differential drive (left and right motor speeds).</p>
+<h4 id="forward-movement"><a class="header" href="#forward-movement">Forward Movement</a></h4>
+<pre><code class="language-json">{
+  "T": 1,
+  "L": 0.8,
+  "R": 0.8
+}
+</code></pre>
+<h4 id="backward-movement"><a class="header" href="#backward-movement">Backward Movement</a></h4>
+<pre><code class="language-json">{
+  "T": 1,
+  "L": -0.5,
+  "R": -0.5
+}
+</code></pre>
+<h4 id="turning-differential-speeds"><a class="header" href="#turning-differential-speeds">Turning (Differential Speeds)</a></h4>
+<pre><code class="language-json">// Turn right
+{
+  "T": 1,
+  "L": 0.6,
+  "R": 0.2
+}
+
+// Turn left
+{
+  "T": 1,
+  "L": 0.2,
+  "R": 0.6
+}
+
+// Spin in place (right)
+{
+  "T": 1,
+  "L": 0.5,
+  "R": -0.5
+}
+</code></pre>
+<h4 id="parameters-3"><a class="header" href="#parameters-3">Parameters</a></h4>
+<ul>
+<li><strong>T</strong>: Command type (always <code>1</code> for movement)</li>
+<li><strong>L</strong>: Left motor speed (<code>-1.0</code> to <code>1.0</code>)
+<ul>
+<li>Positive values: forward direction</li>
+<li>Negative values: backward direction</li>
+<li><code>0.0</code>: stopped</li>
+</ul>
+</li>
+<li><strong>R</strong>: Right motor speed (<code>-1.0</code> to <code>1.0</code>)
+<ul>
+<li>Same range and meaning as left motor</li>
+</ul>
+</li>
+</ul>
+<h3 id="sensor-commands-t-126"><a class="header" href="#sensor-commands-t-126">Sensor Commands (T: 126)</a></h3>
+<p>Retrieve IMU (Inertial Measurement Unit) sensor data.</p>
+<pre><code class="language-json">{
+  "T": 126
+}
+</code></pre>
+<h4 id="response-format-3"><a class="header" href="#response-format-3">Response Format</a></h4>
+<p>The robot returns IMU data as a comma-separated string:</p>
+<pre><code>accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001
+</code></pre>
+<h4 id="data-fields"><a class="header" href="#data-fields">Data Fields</a></h4>
+<ul>
+<li><strong>accel_x</strong>: Acceleration in X-axis (m/s²)</li>
+<li><strong>accel_y</strong>: Acceleration in Y-axis (m/s²)</li>
+<li><strong>accel_z</strong>: Acceleration in Z-axis (m/s²) - typically ~9.81 due to gravity</li>
+<li><strong>gyro_x</strong>: Angular velocity around X-axis (rad/s)</li>
+<li><strong>gyro_y</strong>: Angular velocity around Y-axis (rad/s)</li>
+<li><strong>gyro_z</strong>: Angular velocity around Z-axis (rad/s)</li>
+</ul>
+<h2 id="implementation-in-the-server"><a class="header" href="#implementation-in-the-server">Implementation in the Server</a></h2>
+<h3 id="command-structure-definitions"><a class="header" href="#command-structure-definitions">Command Structure Definitions</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Serialize)]
+pub struct GoForward {
+    #[serde(rename = "T")]
+    command: u8,        // Always 1
+    #[serde(rename = "L")]
+    left_speed: f32,
+    #[serde(rename = "R")]
+    right_speed: f32,
+}
+
+#[derive(Serialize)]
+pub struct IMUData {
+    #[serde(rename = "T")]
+    command: u8,        // Always 126
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="http-communication"><a class="header" href="#http-communication">HTTP Communication</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn command_to_robot&lt;T: Serialize&gt;(command: T) -&gt; Result&lt;String, String&gt; {
+    let json = serde_json::to_string(&amp;command).unwrap();
+    let url = format!("http://{}/js?json={}", ROVER_IP, json);
+    
+    match reqwest::blocking::get(&amp;url) {
+        Ok(response) =&gt; Ok(response.text().unwrap_or("No response".to_string())),
+        Err(_) =&gt; Ok("Robot not responding".to_string()),
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="testing-robot-commands"><a class="header" href="#testing-robot-commands">Testing Robot Commands</a></h2>
+<p>You can test robot commands directly using curl:</p>
+<h3 id="test-movement"><a class="header" href="#test-movement">Test Movement</a></h3>
+<pre><code class="language-bash"># Move forward at 50% speed
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A1%2C%22L%22%3A0.5%2C%22R%22%3A0.5%7D"
+
+# Move backward at 30% speed
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A1%2C%22L%22%3A-0.3%2C%22R%22%3A-0.3%7D"
+
+# Stop (zero speed)
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A1%2C%22L%22%3A0.0%2C%22R%22%3A0.0%7D"
+</code></pre>
+<h3 id="test-imu-data"><a class="header" href="#test-imu-data">Test IMU Data</a></h3>
+<pre><code class="language-bash"># Get sensor data
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A126%7D"
+</code></pre>
+<h2 id="robot-hardware-requirements"><a class="header" href="#robot-hardware-requirements">Robot Hardware Requirements</a></h2>
+<p>Your robot must implement:</p>
+<ol>
+<li><strong>HTTP Server</strong>: Listening on port 80</li>
+<li><strong>Endpoint</strong>: <code>/js</code> accepting GET requests</li>
+<li><strong>JSON Parameter</strong>: <code>json</code> query parameter</li>
+<li><strong>Movement Response</strong>: Acknowledge movement commands</li>
+<li><strong>Sensor Response</strong>: Return IMU data in the specified format</li>
+</ol>
+<h2 id="expected-responses"><a class="header" href="#expected-responses">Expected Responses</a></h2>
+<h3 id="successful-movement"><a class="header" href="#successful-movement">Successful Movement</a></h3>
+<pre><code>OK
+</code></pre>
+<h3 id="successful-imu-retrieval"><a class="header" href="#successful-imu-retrieval">Successful IMU Retrieval</a></h3>
+<pre><code>accel_x:0.02,accel_y:-0.01,accel_z:9.82,gyro_x:0.00,gyro_y:0.00,gyro_z:0.00
+</code></pre>
+<h3 id="error-conditions"><a class="header" href="#error-conditions">Error Conditions</a></h3>
+<ul>
+<li><strong>Network timeout</strong>: No response</li>
+<li><strong>Invalid JSON</strong>: Error message from robot</li>
+<li><strong>Hardware failure</strong>: Robot-specific error message</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="imu-data"><a class="header" href="#imu-data">IMU Data</a></h1>
+<p>The Inertial Measurement Unit (IMU) provides crucial sensor data about the robot’s movement and orientation.</p>
+<h2 id="data-format"><a class="header" href="#data-format">Data Format</a></h2>
+<p>IMU data is returned as a comma-separated string:</p>
+<pre><code>accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001
+</code></pre>
+<h2 id="data-fields-1"><a class="header" href="#data-fields-1">Data Fields</a></h2>
+<h3 id="accelerometer-data-ms²"><a class="header" href="#accelerometer-data-ms²">Accelerometer Data (m/s²)</a></h3>
+<ul>
+<li><strong>accel_x</strong>: Linear acceleration along the X-axis</li>
+<li><strong>accel_y</strong>: Linear acceleration along the Y-axis</li>
+<li><strong>accel_z</strong>: Linear acceleration along the Z-axis (includes gravity ~9.81 m/s²)</li>
+</ul>
+<h3 id="gyroscope-data-rads"><a class="header" href="#gyroscope-data-rads">Gyroscope Data (rad/s)</a></h3>
+<ul>
+<li><strong>gyro_x</strong>: Angular velocity around the X-axis (roll rate)</li>
+<li><strong>gyro_y</strong>: Angular velocity around the Y-axis (pitch rate)</li>
+<li><strong>gyro_z</strong>: Angular velocity around the Z-axis (yaw rate)</li>
+</ul>
+<h2 id="coordinate-system"><a class="header" href="#coordinate-system">Coordinate System</a></h2>
+<p>The IMU typically uses a right-handed coordinate system:</p>
+<pre><code>        Y (forward)
+        ^
+        |
+        |
+Z (up)  |
+   ^    |
+   |    |
+   |    +------&gt; X (right)
+   |   /
+   |  /
+   | /
+   |/
+</code></pre>
+<h3 id="movement-interpretation"><a class="header" href="#movement-interpretation">Movement Interpretation</a></h3>
+<ul>
+<li><strong>Forward/Backward</strong>: Changes in <code>accel_y</code></li>
+<li><strong>Left/Right</strong>: Changes in <code>accel_x</code></li>
+<li><strong>Up/Down</strong>: Changes in <code>accel_z</code></li>
+<li><strong>Turning</strong>: Changes in <code>gyro_z</code></li>
+<li><strong>Tilting</strong>: Changes in <code>gyro_x</code> and <code>gyro_y</code></li>
+</ul>
+<h2 id="typical-values"><a class="header" href="#typical-values">Typical Values</a></h2>
+<h3 id="at-rest-stationary-robot"><a class="header" href="#at-rest-stationary-robot">At Rest (Stationary Robot)</a></h3>
+<pre><code>accel_x:0.02,accel_y:-0.01,accel_z:9.82,gyro_x:0.00,gyro_y:0.00,gyro_z:0.00
+</code></pre>
+<ul>
+<li>Small accelerometer values due to sensor noise</li>
+<li>Z-acceleration ~9.81 m/s² due to gravity</li>
+<li>Near-zero gyroscope values</li>
+</ul>
+<h3 id="during-forward-movement"><a class="header" href="#during-forward-movement">During Forward Movement</a></h3>
+<pre><code>accel_x:0.05,accel_y:0.85,accel_z:9.78,gyro_x:0.01,gyro_y:0.02,gyro_z:0.01
+</code></pre>
+<ul>
+<li>Positive Y-acceleration (forward direction)</li>
+<li>Small changes in other axes due to vibration</li>
+<li>Small gyroscope values if moving straight</li>
+</ul>
+<h3 id="during-turning"><a class="header" href="#during-turning">During Turning</a></h3>
+<pre><code>accel_x:0.15,accel_y:0.45,accel_z:9.80,gyro_x:0.02,gyro_y:0.01,gyro_z:0.35
+</code></pre>
+<ul>
+<li>Non-zero Z-gyroscope (turning motion)</li>
+<li>X-acceleration from centripetal force</li>
+<li>Combined forward and rotational motion</li>
+</ul>
+<h2 id="data-collection"><a class="header" href="#data-collection">Data Collection</a></h2>
+<h3 id="automatic-collection"><a class="header" href="#automatic-collection">Automatic Collection</a></h3>
+<p>IMU data is automatically collected after each movement command:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let result = command_to_robot(command);
+let imu_data = retrieve_imu_data().unwrap();
+let return_message = format!(
+    "reaction of Robot is {:?}\n. IMU data of robot after this move is {:?}",
+    result.unwrap(), 
+    imu_data
+);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="manual-collection"><a class="header" href="#manual-collection">Manual Collection</a></h3>
+<p>Use the <code>stop</code> tool to get current IMU data without moving:</p>
+<pre><code class="language-json">{
+  "method": "tools/call",
+  "params": {
+    "name": "stop",
+    "arguments": {}
+  }
+}
+</code></pre>
+<h2 id="data-quality-considerations"><a class="header" href="#data-quality-considerations">Data Quality Considerations</a></h2>
+<h3 id="sensor-noise"><a class="header" href="#sensor-noise">Sensor Noise</a></h3>
+<ul>
+<li>IMU sensors always have some noise</li>
+<li>Values may fluctuate slightly even when stationary</li>
+<li>Filter values if high precision is needed</li>
+</ul>
+<h3 id="calibration"><a class="header" href="#calibration">Calibration</a></h3>
+<ul>
+<li>IMUs may need calibration after power-on</li>
+<li>Zero-point drift can occur over time</li>
+<li>Temperature affects sensor accuracy</li>
+</ul>
+<h3 id="mounting-orientation"><a class="header" href="#mounting-orientation">Mounting Orientation</a></h3>
+<ul>
+<li>IMU must be properly aligned with robot chassis</li>
+<li>Sensor orientation affects data interpretation</li>
+<li>Consistent mounting is crucial for accurate readings</li>
+</ul>
+<h2 id="data-processing"><a class="header" href="#data-processing">Data Processing</a></h2>
+<h3 id="parsing-imu-data"><a class="header" href="#parsing-imu-data">Parsing IMU Data</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn parse_imu_data(data: &amp;str) -&gt; Result&lt;IMUReading, String&gt; {
+    let mut values = HashMap::new();
+    
+    for pair in data.split(',') {
+        let parts: Vec&lt;&amp;str&gt; = pair.split(':').collect();
+        if parts.len() == 2 {
+            let key = parts[0];
+            let value: f32 = parts[1].parse()
+                .map_err(|_| format!("Invalid number: {}", parts[1]))?;
+            values.insert(key, value);
+        }
+    }
+    
+    Ok(IMUReading {
+        accel_x: values.get("accel_x").copied().unwrap_or(0.0),
+        accel_y: values.get("accel_y").copied().unwrap_or(0.0),
+        accel_z: values.get("accel_z").copied().unwrap_or(0.0),
+        gyro_x: values.get("gyro_x").copied().unwrap_or(0.0),
+        gyro_y: values.get("gyro_y").copied().unwrap_or(0.0),
+        gyro_z: values.get("gyro_z").copied().unwrap_or(0.0),
+    })
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="filtering-and-smoothing"><a class="header" href="#filtering-and-smoothing">Filtering and Smoothing</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Simple moving average filter
+struct IMUFilter {
+    history: VecDeque&lt;IMUReading&gt;,
+    window_size: usize,
+}
+
+impl IMUFilter {
+    fn add_reading(&amp;mut self, reading: IMUReading) -&gt; IMUReading {
+        self.history.push_back(reading);
+        if self.history.len() &gt; self.window_size {
+            self.history.pop_front();
+        }
+        
+        // Calculate average
+        let mut sum = IMUReading::default();
+        for r in &amp;self.history {
+            sum.accel_x += r.accel_x;
+            sum.accel_y += r.accel_y;
+            // ... sum other fields
+        }
+        
+        let count = self.history.len() as f32;
+        IMUReading {
+            accel_x: sum.accel_x / count,
+            accel_y: sum.accel_y / count,
+            // ... average other fields
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="applications"><a class="header" href="#applications">Applications</a></h2>
+<h3 id="motion-detection"><a class="header" href="#motion-detection">Motion Detection</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn detect_motion(imu: &amp;IMUReading) -&gt; bool {
+    let accel_magnitude = (
+        imu.accel_x.powi(2) + 
+        imu.accel_y.powi(2) + 
+        (imu.accel_z - 9.81).powi(2)
+    ).sqrt();
+    
+    let gyro_magnitude = (
+        imu.gyro_x.powi(2) + 
+        imu.gyro_y.powi(2) + 
+        imu.gyro_z.powi(2)
+    ).sqrt();
+    
+    accel_magnitude &gt; 0.5 || gyro_magnitude &gt; 0.1
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="orientation-estimation"><a class="header" href="#orientation-estimation">Orientation Estimation</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn estimate_tilt(imu: &amp;IMUReading) -&gt; (f32, f32) {
+    let roll = imu.accel_y.atan2(imu.accel_z);
+    let pitch = (-imu.accel_x).atan2(
+        (imu.accel_y.powi(2) + imu.accel_z.powi(2)).sqrt()
+    );
+    (roll.to_degrees(), pitch.to_degrees())
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="collision-detection"><a class="header" href="#collision-detection">Collision Detection</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn detect_collision(imu: &amp;IMUReading) -&gt; bool {
+    let impact_threshold = 20.0; // m/s²
+    let total_accel = (
+        imu.accel_x.powi(2) + 
+        imu.accel_y.powi(2) + 
+        imu.accel_z.powi(2)
+    ).sqrt();
+    
+    total_accel &gt; impact_threshold
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="building-from-source"><a class="header" href="#building-from-source">Building from Source</a></h1>
+<h2 id="development-setup"><a class="header" href="#development-setup">Development Setup</a></h2>
+<h3 id="prerequisites-1"><a class="header" href="#prerequisites-1">Prerequisites</a></h3>
+<ul>
+<li>Rust 1.70+ (install via <a href="https://rustup.rs/">rustup</a>)</li>
+<li>Git for version control</li>
+<li>A robot compatible with the command protocol</li>
+</ul>
+<h3 id="clone-and-build"><a class="header" href="#clone-and-build">Clone and Build</a></h3>
+<pre><code class="language-bash">git clone https://github.com/your-username/robot-command-mcp.git
+cd robot-command-mcp
+cargo build
+</code></pre>
+<h3 id="development-build"><a class="header" href="#development-build">Development Build</a></h3>
+<pre><code class="language-bash">cargo build
+./target/debug/robot-mcp
+</code></pre>
+<h3 id="release-build"><a class="header" href="#release-build">Release Build</a></h3>
+<pre><code class="language-bash">cargo build --release
+./target/release/robot-mcp
+</code></pre>
+<h2 id="project-structure"><a class="header" href="#project-structure">Project Structure</a></h2>
+<pre><code>robot-command-mcp/
+├── Cargo.toml          # Rust project configuration
+├── Cargo.lock          # Dependency lock file
+├── src/
+│   └── main.rs         # Main application code
+├── docs/               # mdBook documentation
+└── target/             # Build artifacts
+    ├── debug/          # Development builds
+    └── release/        # Optimized builds
+</code></pre>
+<h2 id="dependencies"><a class="header" href="#dependencies">Dependencies</a></h2>
+<p>Key dependencies defined in <code>Cargo.toml</code>:</p>
+<pre><code class="language-toml">[dependencies]
+rmcp = "0.1.0"          # Model Context Protocol implementation
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+</code></pre>
+<h2 id="customization"><a class="header" href="#customization">Customization</a></h2>
+<h3 id="changing-robot-ip"><a class="header" href="#changing-robot-ip">Changing Robot IP</a></h3>
+<p>Edit the <code>ROVER_IP</code> constant in <code>src/main.rs</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const ROVER_IP: &amp;str = "192.168.1.100"; // Your robot's IP
+<span class="boring">}</span></code></pre></pre>
+<h3 id="adding-new-tools"><a class="header" href="#adding-new-tools">Adding New Tools</a></h3>
+<ol>
+<li>Define the command structure:</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Serialize)]
+pub struct TurnLeft {
+    #[serde(rename = "T")]
+    command: u8,
+    #[serde(rename = "angle")]
+    angle: f32,
+}
+<span class="boring">}</span></code></pre></pre>
+<ol start="2">
+<li>Add the tool to the server:</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tool(description = "Turn robot left by specified angle")]
+async fn turn_left(&amp;self, Parameters(angle): Parameters&lt;Angle&gt;) 
+    -&gt; Result&lt;CallToolResult, ErrorData&gt; {
+    // Implementation
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="modifying-command-protocol"><a class="header" href="#modifying-command-protocol">Modifying Command Protocol</a></h3>
+<p>To support different robot APIs, modify the <code>command_to_robot</code> function:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn command_to_robot&lt;T: Serialize&gt;(command: T) -&gt; Result&lt;String, String&gt; {
+    let json = serde_json::to_string(&amp;command).unwrap();
+    // Modify URL format as needed
+    let url = format!("http://{}/api/v2/command", ROVER_IP);
+    // Change to POST request if needed
+    // ...
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="testing"><a class="header" href="#testing">Testing</a></h2>
+<h3 id="unit-tests"><a class="header" href="#unit-tests">Unit Tests</a></h3>
+<pre><code class="language-bash">cargo test
+</code></pre>
+<h3 id="integration-tests"><a class="header" href="#integration-tests">Integration Tests</a></h3>
+<pre><code class="language-bash"># Test with a mock robot
+cargo test -- --test-threads 1
+</code></pre>
+<h3 id="manual-testing-1"><a class="header" href="#manual-testing-1">Manual Testing</a></h3>
+<pre><code class="language-bash"># Start the server
+cargo run
+
+# In another terminal, test MCP protocol
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | ./target/debug/robot-mcp
+</code></pre>
+<h2 id="cross-compilation"><a class="header" href="#cross-compilation">Cross-Compilation</a></h2>
+<h3 id="for-raspberry-pi-arm64"><a class="header" href="#for-raspberry-pi-arm64">For Raspberry Pi (ARM64)</a></h3>
+<pre><code class="language-bash">rustup target add aarch64-unknown-linux-gnu
+cargo build --target aarch64-unknown-linux-gnu --release
+</code></pre>
+<h3 id="for-windows"><a class="header" href="#for-windows">For Windows</a></h3>
+<pre><code class="language-bash">rustup target add x86_64-pc-windows-gnu
+cargo build --target x86_64-pc-windows-gnu --release
+</code></pre>
+<h2 id="optimization"><a class="header" href="#optimization">Optimization</a></h2>
+<h3 id="release-optimizations"><a class="header" href="#release-optimizations">Release Optimizations</a></h3>
+<p>The release build includes optimizations defined in <code>Cargo.toml</code>:</p>
+<pre><code class="language-toml">[profile.release]
+opt-level = 3           # Maximum optimization
+lto = true             # Link-time optimization
+codegen-units = 1      # Better optimization
+panic = 'abort'        # Smaller binary size
+</code></pre>
+<h3 id="binary-size-reduction"><a class="header" href="#binary-size-reduction">Binary Size Reduction</a></h3>
+<pre><code class="language-bash"># Strip debug symbols
+strip target/release/robot-mcp
+
+# Use cargo-strip
+cargo install cargo-strip
+cargo strip --release
+</code></pre>
+<h3 id="performance-profiling"><a class="header" href="#performance-profiling">Performance Profiling</a></h3>
+<pre><code class="language-bash"># Install profiling tools
+cargo install cargo-profdata
+cargo install cargo-show-asm
+
+# Profile the application
+cargo profdata run --release
+</code></pre>
+<h2 id="debugging"><a class="header" href="#debugging">Debugging</a></h2>
+<h3 id="enable-debug-logging"><a class="header" href="#enable-debug-logging">Enable Debug Logging</a></h3>
+<pre><code class="language-bash">RUST_LOG=debug cargo run
+</code></pre>
+<h3 id="use-debugger"><a class="header" href="#use-debugger">Use Debugger</a></h3>
+<pre><code class="language-bash"># With GDB
+rust-gdb target/debug/robot-mcp
+
+# With LLDB
+rust-lldb target/debug/robot-mcp
+</code></pre>
+<h3 id="analyze-dependencies"><a class="header" href="#analyze-dependencies">Analyze Dependencies</a></h3>
+<pre><code class="language-bash"># Show dependency tree
+cargo tree
+
+# Check for outdated dependencies
+cargo outdated
+
+# Audit for security issues
+cargo audit
+</code></pre>
+<h2 id="continuous-integration"><a class="header" href="#continuous-integration">Continuous Integration</a></h2>
+<h3 id="github-actions-example"><a class="header" href="#github-actions-example">GitHub Actions Example</a></h3>
+<pre><code class="language-yaml">name: Build and Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: cargo test --all-features
+    - run: cargo build --release
+</code></pre>
+<h2 id="documentation"><a class="header" href="#documentation">Documentation</a></h2>
+<h3 id="generate-rust-docs"><a class="header" href="#generate-rust-docs">Generate Rust Docs</a></h3>
+<pre><code class="language-bash">cargo doc --open
+</code></pre>
+<h3 id="build-this-documentation"><a class="header" href="#build-this-documentation">Build This Documentation</a></h3>
+<pre><code class="language-bash">cd docs
+mdbook build
+mdbook serve
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="contributing"><a class="header" href="#contributing">Contributing</a></h1>
+<p>We welcome contributions to the LLM Robot Commander project! This guide will help you get started.</p>
+<h2 id="ways-to-contribute"><a class="header" href="#ways-to-contribute">Ways to Contribute</a></h2>
+<ul>
+<li><strong>Bug Reports</strong>: Report issues you encounter</li>
+<li><strong>Feature Requests</strong>: Suggest new capabilities</li>
+<li><strong>Code Contributions</strong>: Fix bugs or add features</li>
+<li><strong>Documentation</strong>: Improve or expand documentation</li>
+<li><strong>Testing</strong>: Help test on different platforms and robots</li>
+</ul>
+<h2 id="development-setup-1"><a class="header" href="#development-setup-1">Development Setup</a></h2>
+<h3 id="1-fork-and-clone"><a class="header" href="#1-fork-and-clone">1. Fork and Clone</a></h3>
+<pre><code class="language-bash"># Fork the repository on GitHub
+git clone https://github.com/your-username/robot-command-mcp.git
+cd robot-command-mcp
+</code></pre>
+<h3 id="2-set-up-development-environment"><a class="header" href="#2-set-up-development-environment">2. Set Up Development Environment</a></h3>
+<pre><code class="language-bash"># Install Rust if you haven't already
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Install development tools
+cargo install cargo-fmt
+cargo install cargo-clippy
+cargo install cargo-audit
+</code></pre>
+<h3 id="3-build-and-test"><a class="header" href="#3-build-and-test">3. Build and Test</a></h3>
+<pre><code class="language-bash"># Build the project
+cargo build
+
+# Run tests
+cargo test
+
+# Check formatting
+cargo fmt --check
+
+# Run linter
+cargo clippy
+</code></pre>
+<h2 id="making-changes"><a class="header" href="#making-changes">Making Changes</a></h2>
+<h3 id="1-create-a-feature-branch"><a class="header" href="#1-create-a-feature-branch">1. Create a Feature Branch</a></h3>
+<pre><code class="language-bash">git checkout -b feature/your-feature-name
+</code></pre>
+<h3 id="2-make-your-changes"><a class="header" href="#2-make-your-changes">2. Make Your Changes</a></h3>
+<ul>
+<li>Write clean, well-documented code</li>
+<li>Follow existing code style and patterns</li>
+<li>Add tests for new functionality</li>
+<li>Update documentation as needed</li>
+</ul>
+<h3 id="3-test-your-changes"><a class="header" href="#3-test-your-changes">3. Test Your Changes</a></h3>
+<pre><code class="language-bash"># Run all tests
+cargo test
+
+# Test with a real robot if possible
+cargo build --release
+./target/release/robot-mcp
+</code></pre>
+<h3 id="4-commit-changes"><a class="header" href="#4-commit-changes">4. Commit Changes</a></h3>
+<pre><code class="language-bash">git add .
+git commit -m "Add descriptive commit message"
+</code></pre>
+<h2 id="code-style"><a class="header" href="#code-style">Code Style</a></h2>
+<h3 id="rust-formatting"><a class="header" href="#rust-formatting">Rust Formatting</a></h3>
+<p>Use <code>rustfmt</code> for consistent formatting:</p>
+<pre><code class="language-bash">cargo fmt
+</code></pre>
+<h3 id="naming-conventions"><a class="header" href="#naming-conventions">Naming Conventions</a></h3>
+<ul>
+<li><strong>Functions</strong>: <code>snake_case</code></li>
+<li><strong>Variables</strong>: <code>snake_case</code></li>
+<li><strong>Types</strong>: <code>PascalCase</code></li>
+<li><strong>Constants</strong>: <code>SCREAMING_SNAKE_CASE</code></li>
+</ul>
+<h3 id="documentation-1"><a class="header" href="#documentation-1">Documentation</a></h3>
+<ul>
+<li>Document all public functions and types</li>
+<li>Use clear, descriptive names</li>
+<li>Include examples where helpful</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Sends a movement command to the robot and retrieves IMU data
+/// 
+/// # Arguments
+/// * `command` - A serializable command structure
+/// 
+/// # Returns
+/// * `Ok(String)` - Robot response message
+/// * `Err(String)` - Error description
+/// 
+/// # Examples
+/// ```
+/// let forward_cmd = GoForward::new(0.5);
+/// let result = command_to_robot(forward_cmd)?;
+/// ```
+fn command_to_robot&lt;T: Serialize&gt;(command: T) -&gt; Result&lt;String, String&gt; {
+    // Implementation
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="adding-new-features"><a class="header" href="#adding-new-features">Adding New Features</a></h2>
+<h3 id="new-robot-commands"><a class="header" href="#new-robot-commands">New Robot Commands</a></h3>
+<ol>
+<li>Define the command structure:</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Serialize)]
+pub struct TurnRight {
+    #[serde(rename = "T")]
+    command: u8,
+    #[serde(rename = "angle")]
+    angle: f32,
+}
+
+impl TurnRight {
+    pub fn new(angle: f32) -&gt; Self {
+        Self {
+            command: 2, // New command type
+            angle,
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<ol start="2">
+<li>Add parameter type:</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
+pub struct Angle {
+    #[schemars(description = "Angle in degrees")]
+    angle: f32,
+}
+<span class="boring">}</span></code></pre></pre>
+<ol start="3">
+<li>Implement the tool:</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tool(description = "Turn robot right by specified angle")]
+async fn turn_right(&amp;self, Parameters(Angle{angle}): Parameters&lt;Angle&gt;) 
+    -&gt; Result&lt;CallToolResult, ErrorData&gt; {
+    let command = TurnRight::new(angle);
+    let result = command_to_robot(command);
+    let imu_data = retrieve_imu_data().unwrap();
+    let return_message = format!(
+        "Robot turned right {}°. IMU data: {:?}", 
+        angle, imu_data
+    );
+    Ok(CallToolResult::success(vec![Content::text(return_message)]))
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="new-sensor-types"><a class="header" href="#new-sensor-types">New Sensor Types</a></h3>
+<ol>
+<li>Define sensor command:</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Serialize)]
+pub struct CameraData {
+    #[serde(rename = "T")]
+    command: u8, // e.g., 127
+}
+<span class="boring">}</span></code></pre></pre>
+<ol start="2">
+<li>Add retrieval function:</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn retrieve_camera_data() -&gt; Result&lt;String, String&gt; {
+    let camera_command = CameraData::new();
+    command_to_robot(camera_command)
+}
+<span class="boring">}</span></code></pre></pre>
+<ol start="3">
+<li>Update existing tools to include new sensor data</li>
+</ol>
+<h2 id="testing-1"><a class="header" href="#testing-1">Testing</a></h2>
+<h3 id="unit-tests-1"><a class="header" href="#unit-tests-1">Unit Tests</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_go_forward_creation() {
+        let command = GoForward::new(0.5);
+        assert_eq!(command.command, 1);
+        assert_eq!(command.left_speed, 0.5);
+        assert_eq!(command.right_speed, 0.5);
+    }
+
+    #[test]
+    fn test_go_backward_negative_speed() {
+        let command = GoBackward::new(0.3);
+        assert_eq!(command.left_speed, -0.3);
+        assert_eq!(command.right_speed, -0.3);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="integration-tests-1"><a class="header" href="#integration-tests-1">Integration Tests</a></h3>
+<p>Create tests in <code>tests/</code> directory:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// tests/integration_test.rs
+use robot_command_mcp::*;
+
+#[tokio::test]
+async fn test_server_initialization() {
+    let server = RobotControlsServer::new();
+    let info = server.get_info();
+    assert_eq!(info.protocol_version, ProtocolVersion::V_2024_11_05);
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="manual-testing-checklist"><a class="header" href="#manual-testing-checklist">Manual Testing Checklist</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Server starts without errors</li>
+<li><input disabled="" type="checkbox"/>
+MCP client can connect</li>
+<li><input disabled="" type="checkbox"/>
+All tools are discovered</li>
+<li><input disabled="" type="checkbox"/>
+Robot commands work correctly</li>
+<li><input disabled="" type="checkbox"/>
+IMU data is retrieved properly</li>
+<li><input disabled="" type="checkbox"/>
+Error handling works as expected</li>
+</ul>
+<h2 id="documentation-2"><a class="header" href="#documentation-2">Documentation</a></h2>
+<h3 id="code-documentation"><a class="header" href="#code-documentation">Code Documentation</a></h3>
+<ul>
+<li>Use <code>///</code> for documentation comments</li>
+<li>Document all public APIs</li>
+<li>Include examples where helpful</li>
+<li>Explain complex algorithms</li>
+</ul>
+<h3 id="mdbook-documentation"><a class="header" href="#mdbook-documentation">mdBook Documentation</a></h3>
+<p>Update relevant sections in <code>docs/src/</code>:</p>
+<ul>
+<li>Add new tools to <code>tools.md</code></li>
+<li>Update architecture diagrams if needed</li>
+<li>Add troubleshooting entries for new features</li>
+</ul>
+<h3 id="readme-updates"><a class="header" href="#readme-updates">README Updates</a></h3>
+<p>Keep the main README current with:</p>
+<ul>
+<li>New features and capabilities</li>
+<li>Updated installation instructions</li>
+<li>Changed requirements</li>
+</ul>
+<h2 id="submission-guidelines"><a class="header" href="#submission-guidelines">Submission Guidelines</a></h2>
+<h3 id="pull-request-process"><a class="header" href="#pull-request-process">Pull Request Process</a></h3>
+<ol>
+<li><strong>Update Documentation</strong>: Ensure all documentation reflects your changes</li>
+<li><strong>Add Tests</strong>: Include tests for new functionality</li>
+<li><strong>Check CI</strong>: Ensure all tests pass</li>
+<li><strong>Update CHANGELOG</strong>: Document your changes</li>
+<li><strong>Submit PR</strong>: Create a pull request with a clear description</li>
+</ol>
+<h3 id="pr-description-template"><a class="header" href="#pr-description-template">PR Description Template</a></h3>
+<pre><code class="language-markdown">## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+
+## Testing
+- [ ] Unit tests added/updated
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+
+## Checklist
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] No new warnings introduced
+</code></pre>
+<h2 id="code-review-process"><a class="header" href="#code-review-process">Code Review Process</a></h2>
+<ol>
+<li><strong>Automated Checks</strong>: CI runs tests, formatting, and linting</li>
+<li><strong>Maintainer Review</strong>: Project maintainers review code and design</li>
+<li><strong>Feedback Integration</strong>: Address review comments</li>
+<li><strong>Final Approval</strong>: Maintainer approves and merges</li>
+</ol>
+<h2 id="release-process"><a class="header" href="#release-process">Release Process</a></h2>
+<h3 id="versioning"><a class="header" href="#versioning">Versioning</a></h3>
+<p>We use <a href="https://semver.org/">Semantic Versioning</a>:</p>
+<ul>
+<li><strong>MAJOR</strong>: Breaking changes</li>
+<li><strong>MINOR</strong>: New features (backward compatible)</li>
+<li><strong>PATCH</strong>: Bug fixes</li>
+</ul>
+<h3 id="release-checklist"><a class="header" href="#release-checklist">Release Checklist</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Update version in <code>Cargo.toml</code></li>
+<li><input disabled="" type="checkbox"/>
+Update CHANGELOG.md</li>
+<li><input disabled="" type="checkbox"/>
+Create release tag</li>
+<li><input disabled="" type="checkbox"/>
+Build and test release binaries</li>
+<li><input disabled="" type="checkbox"/>
+Update documentation</li>
+</ul>
+<h2 id="getting-help-1"><a class="header" href="#getting-help-1">Getting Help</a></h2>
+<ul>
+<li><strong>Discussion</strong>: Use GitHub Discussions for questions</li>
+<li><strong>Issues</strong>: Report bugs via GitHub Issues</li>
+<li><strong>Chat</strong>: Join project chat/Discord if available</li>
+<li><strong>Email</strong>: Contact maintainers for sensitive topics</li>
+</ul>
+<h2 id="recognition"><a class="header" href="#recognition">Recognition</a></h2>
+<p>Contributors will be recognized in:</p>
+<ul>
+<li>CONTRIBUTORS.md file</li>
+<li>Release notes</li>
+<li>Project documentation</li>
+</ul>
+<p>Thank you for contributing to LLM Robot Commander!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="testing-2"><a class="header" href="#testing-2">Testing</a></h1>
+<p>This guide covers testing strategies and procedures for the LLM Robot Commander.</p>
+<h2 id="testing-overview"><a class="header" href="#testing-overview">Testing Overview</a></h2>
+<p>The project includes multiple testing levels:</p>
+<ol>
+<li><strong>Unit Tests</strong>: Test individual functions and components</li>
+<li><strong>Integration Tests</strong>: Test component interactions</li>
+<li><strong>MCP Protocol Tests</strong>: Test MCP compliance</li>
+<li><strong>Hardware Tests</strong>: Test with real robot hardware</li>
+<li><strong>End-to-End Tests</strong>: Test complete user workflows</li>
+</ol>
+<h2 id="running-tests"><a class="header" href="#running-tests">Running Tests</a></h2>
+<h3 id="basic-test-commands"><a class="header" href="#basic-test-commands">Basic Test Commands</a></h3>
+<pre><code class="language-bash"># Run all tests
+cargo test
+
+# Run tests with output
+cargo test -- --nocapture
+
+# Run specific test
+cargo test test_name
+
+# Run tests in release mode
+cargo test --release
+</code></pre>
+<h3 id="test-categories"><a class="header" href="#test-categories">Test Categories</a></h3>
+<pre><code class="language-bash"># Run only unit tests
+cargo test --lib
+
+# Run only integration tests
+cargo test --test integration
+
+# Run only doc tests
+cargo test --doc
+</code></pre>
+<h2 id="unit-tests-2"><a class="header" href="#unit-tests-2">Unit Tests</a></h2>
+<h3 id="command-structure-tests"><a class="header" href="#command-structure-tests">Command Structure Tests</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_go_forward_serialization() {
+        let command = GoForward::new(0.7);
+        let json = serde_json::to_string(&amp;command).unwrap();
+        assert_eq!(json, r#"{"T":1,"L":0.7,"R":0.7}"#);
+    }
+
+    #[test]
+    fn test_go_backward_negative_speed() {
+        let command = GoBackward::new(0.5);
+        assert_eq!(command.left_speed, -0.5);
+        assert_eq!(command.right_speed, -0.5);
+    }
+
+    #[test]
+    fn test_imu_command_serialization() {
+        let command = IMUData::new();
+        let json = serde_json::to_string(&amp;command).unwrap();
+        assert_eq!(json, r#"{"T":126}"#);
+    }
+
+    #[test]
+    fn test_speed_parameter_validation() {
+        // Test valid speeds
+        assert!(validate_speed(0.0).is_ok());
+        assert!(validate_speed(0.5).is_ok());
+        assert!(validate_speed(1.0).is_ok());
+        
+        // Test invalid speeds
+        assert!(validate_speed(-0.1).is_err());
+        assert!(validate_speed(1.1).is_err());
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="http-communication-tests"><a class="header" href="#http-communication-tests">HTTP Communication Tests</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(test)]
+mod http_tests {
+    use super::*;
+    use mockito;
+
+    #[test]
+    fn test_successful_robot_command() {
+        let mut server = mockito::Server::new();
+        let mock = server.mock("GET", "/js")
+            .match_query(mockito::Matcher::UrlEncoded("json".into(), r#"{"T":1,"L":0.5,"R":0.5}"#.into()))
+            .with_status(200)
+            .with_body("OK")
+            .create();
+
+        let command = GoForward::new(0.5);
+        let result = command_to_robot_with_url(command, &amp;server.url());
+        
+        mock.assert();
+        assert_eq!(result.unwrap(), "OK");
+    }
+
+    #[test]
+    fn test_robot_not_responding() {
+        // Test with invalid URL to simulate network failure
+        let command = GoForward::new(0.5);
+        let result = command_to_robot_with_url(command, "http://invalid.url");
+        
+        assert_eq!(result.unwrap(), "Robot not responding");
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="integration-tests-2"><a class="header" href="#integration-tests-2">Integration Tests</a></h2>
+<h3 id="mcp-server-tests"><a class="header" href="#mcp-server-tests">MCP Server Tests</a></h3>
+<p>Create <code>tests/mcp_integration.rs</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use robot_command_mcp::*;
+use rmcp::model::*;
+use tokio_test;
+
+#[tokio::test]
+async fn test_server_initialization() {
+    let server = RobotControlsServer::new();
+    let info = server.get_info();
+    
+    assert_eq!(info.protocol_version, ProtocolVersion::V_2024_11_05);
+    assert!(info.capabilities.tools.is_some());
+}
+
+#[tokio::test]
+async fn test_tool_discovery() {
+    let server = RobotControlsServer::new();
+    let tools = server.list_tools().await;
+    
+    assert!(tools.len() &gt;= 3);
+    
+    let tool_names: Vec&lt;&amp;str&gt; = tools.iter()
+        .map(|t| t.name.as_str())
+        .collect();
+    
+    assert!(tool_names.contains(&amp;"move_forward"));
+    assert!(tool_names.contains(&amp;"move_backward"));
+    assert!(tool_names.contains(&amp;"stop"));
+}
+
+#[tokio::test]
+async fn test_move_forward_tool() {
+    let server = RobotControlsServer::new();
+    let params = serde_json::json!({
+        "speed": 0.5
+    });
+    
+    // Note: This will fail without a real robot
+    // Consider mocking HTTP requests for CI
+    let result = server.call_tool("move_forward", params).await;
+    
+    // In a real test environment with mock robot:
+    // assert!(result.is_ok());
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="mock-robot-server"><a class="header" href="#mock-robot-server">Mock Robot Server</a></h3>
+<p>For CI/CD, create a mock robot server:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// tests/mock_robot.rs
+use std::collections::HashMap;
+use std::sync::Arc;
+use tokio::sync::RwLock;
+use warp::Filter;
+
+pub struct MockRobot {
+    state: Arc&lt;RwLock&lt;RobotState&gt;&gt;,
+}
+
+#[derive(Clone)]
+struct RobotState {
+    last_command: Option&lt;String&gt;,
+    imu_data: String,
+}
+
+impl MockRobot {
+    pub fn new() -&gt; Self {
+        Self {
+            state: Arc::new(RwLock::new(RobotState {
+                last_command: None,
+                imu_data: "accel_x:0.0,accel_y:0.0,accel_z:9.81,gyro_x:0.0,gyro_y:0.0,gyro_z:0.0".to_string(),
+            })),
+        }
+    }
+
+    pub async fn start_server(&amp;self, port: u16) {
+        let state = self.state.clone();
+        
+        let route = warp::path("js")
+            .and(warp::query::&lt;HashMap&lt;String, String&gt;&gt;())
+            .and(warp::any().map(move || state.clone()))
+            .and_then(handle_command);
+
+        warp::serve(route)
+            .run(([127, 0, 0, 1], port))
+            .await;
+    }
+}
+
+async fn handle_command(
+    query: HashMap&lt;String, String&gt;,
+    state: Arc&lt;RwLock&lt;RobotState&gt;&gt;,
+) -&gt; Result&lt;impl warp::Reply, warp::Rejection&gt; {
+    if let Some(json) = query.get("json") {
+        let mut robot_state = state.write().await;
+        robot_state.last_command = Some(json.clone());
+        
+        // Parse command and return appropriate response
+        if json.contains(r#""T":126"#) {
+            // IMU request
+            Ok(robot_state.imu_data.clone())
+        } else {
+            // Movement command
+            Ok("OK".to_string())
+        }
+    } else {
+        Ok("Error: No JSON parameter".to_string())
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="hardware-testing"><a class="header" href="#hardware-testing">Hardware Testing</a></h2>
+<h3 id="test-with-real-robot"><a class="header" href="#test-with-real-robot">Test with Real Robot</a></h3>
+<pre><code class="language-bash"># Ensure robot is connected and at correct IP
+ping 192.168.4.1
+
+# Build and run server
+cargo build --release
+./target/release/robot-mcp
+</code></pre>
+<h3 id="manual-test-sequence"><a class="header" href="#manual-test-sequence">Manual Test Sequence</a></h3>
+<ol>
+<li>
+<p><strong>Basic Connection</strong>:</p>
+<pre><code class="language-bash">curl "http://192.168.4.1/js?json=%7B%22T%22%3A126%7D"
+</code></pre>
+</li>
+<li>
+<p><strong>Movement Commands</strong>:</p>
+<pre><code class="language-bash"># Forward
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A1%2C%22L%22%3A0.3%2C%22R%22%3A0.3%7D"
+
+# Backward
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A1%2C%22L%22%3A-0.3%2C%22R%22%3A-0.3%7D"
+
+# Stop
+curl "http://192.168.4.1/js?json=%7B%22T%22%3A1%2C%22L%22%3A0.0%2C%22R%22%3A0.0%7D"
+</code></pre>
+</li>
+<li>
+<p><strong>MCP Protocol Test</strong>:</p>
+<pre><code class="language-bash">echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | ./target/release/robot-mcp
+</code></pre>
+</li>
+</ol>
+<h3 id="hardware-test-checklist"><a class="header" href="#hardware-test-checklist">Hardware Test Checklist</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Robot responds to ping</li>
+<li><input disabled="" type="checkbox"/>
+HTTP endpoint accepts requests</li>
+<li><input disabled="" type="checkbox"/>
+Movement commands work correctly</li>
+<li><input disabled="" type="checkbox"/>
+IMU data is returned in correct format</li>
+<li><input disabled="" type="checkbox"/>
+Robot stops when commanded</li>
+<li><input disabled="" type="checkbox"/>
+No network timeouts or errors</li>
+<li><input disabled="" type="checkbox"/>
+Sensor data looks reasonable</li>
+</ul>
+<h2 id="performance-testing"><a class="header" href="#performance-testing">Performance Testing</a></h2>
+<h3 id="load-testing"><a class="header" href="#load-testing">Load Testing</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tokio::test]
+async fn test_concurrent_commands() {
+    let server = RobotControlsServer::new();
+    let mut handles = vec![];
+    
+    // Send multiple commands concurrently
+    for i in 0..10 {
+        let server_clone = server.clone();
+        let handle = tokio::spawn(async move {
+            let params = serde_json::json!({
+                "speed": 0.1 * i as f32
+            });
+            server_clone.call_tool("move_forward", params).await
+        });
+        handles.push(handle);
+    }
+    
+    // Wait for all commands to complete
+    for handle in handles {
+        let result = handle.await.unwrap();
+        // Verify results...
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="memory-testing"><a class="header" href="#memory-testing">Memory Testing</a></h3>
+<pre><code class="language-bash"># Monitor memory usage during testing
+valgrind --tool=memcheck --leak-check=full ./target/debug/robot-mcp
+
+# Or use cargo-profdata
+cargo install cargo-profdata
+cargo profdata run
+</code></pre>
+<h2 id="continuous-integration-1"><a class="header" href="#continuous-integration-1">Continuous Integration</a></h2>
+<h3 id="github-actions-configuration"><a class="header" href="#github-actions-configuration">GitHub Actions Configuration</a></h3>
+<pre><code class="language-yaml"># .github/workflows/test.yml
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: rustfmt, clippy
+    
+    - name: Check formatting
+      run: cargo fmt --check
+    
+    - name: Run clippy
+      run: cargo clippy -- -D warnings
+    
+    - name: Run tests
+      run: cargo test --all-features
+    
+    - name: Run integration tests
+      run: cargo test --test '*' -- --test-threads=1
+      
+    - name: Check docs
+      run: cargo doc --no-deps
+</code></pre>
+<h3 id="test-coverage"><a class="header" href="#test-coverage">Test Coverage</a></h3>
+<pre><code class="language-bash"># Install cargo-tarpaulin for coverage
+cargo install cargo-tarpaulin
+
+# Generate coverage report
+cargo tarpaulin --verbose --all-features --workspace --timeout 120 --out Html
+
+# View coverage report
+open tarpaulin-report.html
+</code></pre>
+<h2 id="test-data-management"><a class="header" href="#test-data-management">Test Data Management</a></h2>
+<h3 id="test-fixtures"><a class="header" href="#test-fixtures">Test Fixtures</a></h3>
+<p>Create test data files in <code>tests/fixtures/</code>:</p>
+<pre><code>tests/
+├── fixtures/
+│   ├── valid_commands.json
+│   ├── invalid_commands.json
+│   └── sample_imu_data.txt
+└── integration/
+    ├── mcp_tests.rs
+    └── robot_tests.rs
+</code></pre>
+<h3 id="environment-setup"><a class="header" href="#environment-setup">Environment Setup</a></h3>
+<pre><code class="language-bash"># Set test environment variables
+export RUST_LOG=debug
+export TEST_ROBOT_IP=127.0.0.1:3000
+
+# Run tests with environment
+cargo test
+</code></pre>
+<h2 id="debugging-test-failures"><a class="header" href="#debugging-test-failures">Debugging Test Failures</a></h2>
+<h3 id="common-issues"><a class="header" href="#common-issues">Common Issues</a></h3>
+<ol>
+<li><strong>Robot Not Available</strong>: Use mock robot for CI</li>
+<li><strong>Network Timeouts</strong>: Increase timeout values for slow networks</li>
+<li><strong>Flaky Tests</strong>: Add retry logic for network operations</li>
+<li><strong>Race Conditions</strong>: Use proper synchronization in async tests</li>
+</ol>
+<h3 id="debug-tools"><a class="header" href="#debug-tools">Debug Tools</a></h3>
+<pre><code class="language-bash"># Run tests with debug output
+RUST_LOG=debug cargo test -- --nocapture
+
+# Run single test with backtrace
+RUST_BACKTRACE=1 cargo test test_name
+
+# Use debugger
+rust-gdb target/debug/deps/robot_command_mcp-&lt;hash&gt;
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="common-issues-1"><a class="header" href="#common-issues-1">Common Issues</a></h1>
+<h2 id="server-issues"><a class="header" href="#server-issues">Server Issues</a></h2>
+<h3 id="server-wont-start"><a class="header" href="#server-wont-start">Server Won’t Start</a></h3>
+<p><strong>Problem</strong>: The server executable doesn’t start or exits immediately.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check Rust installation: <code>rustc --version</code></li>
+<li>Verify executable permissions: <code>chmod +x target/release/robot-mcp</code></li>
+<li>Check for missing dependencies: <code>cargo build --release</code></li>
+<li>Look for error messages in stderr output</li>
+</ol>
+<h3 id="server-starts-but-mcp-client-cant-connect"><a class="header" href="#server-starts-but-mcp-client-cant-connect">Server Starts but MCP Client Can’t Connect</a></h3>
+<p><strong>Problem</strong>: Server runs but MCP client shows connection errors.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify the executable path in your MCP client configuration</li>
+<li>Check that the path is absolute, not relative</li>
+<li>Ensure the server executable exists and is accessible</li>
+<li>Check MCP client logs for specific error messages</li>
+</ol>
+<p><strong>Example Configuration (Claude Desktop)</strong>:</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "RobotCommandServer": {
+      "command": "/Users/your-username/projects/robot-command-mcp/target/release/robot-mcp",
+      "args": []
+    }
+  }
+}
+</code></pre>
+<h2 id="robot-communication-issues"><a class="header" href="#robot-communication-issues">Robot Communication Issues</a></h2>
+<h3 id="robot-not-responding"><a class="header" href="#robot-not-responding">Robot Not Responding</a></h3>
+<p><strong>Problem</strong>: All robot commands return “Robot not responding”.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Check Network Connection</strong>:
+<pre><code class="language-bash">ping 192.168.4.1
+</code></pre>
+</li>
+<li><strong>Verify Robot IP</strong>: Ensure robot is actually at <code>192.168.4.1</code></li>
+<li><strong>Test Robot API Directly</strong>:
+<pre><code class="language-bash">curl "http://192.168.4.1/js?json=%7B%22T%22%3A126%7D"
+</code></pre>
+</li>
+<li><strong>Check Firewall</strong>: Ensure no firewall is blocking HTTP requests</li>
+<li><strong>Verify Robot Power</strong>: Make sure robot is powered on and running</li>
+</ol>
+<h3 id="inconsistent-robot-responses"><a class="header" href="#inconsistent-robot-responses">Inconsistent Robot Responses</a></h3>
+<p><strong>Problem</strong>: Robot sometimes responds, sometimes doesn’t.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Check WiFi Signal Strength</strong>: Poor connection can cause timeouts</li>
+<li><strong>Verify Robot Firmware</strong>: Ensure robot API is stable</li>
+<li><strong>Check Network Load</strong>: Heavy network traffic can cause delays</li>
+<li><strong>Monitor Robot Logs</strong>: If available, check robot-side error logs</li>
+</ol>
+<h3 id="invalid-imu-data"><a class="header" href="#invalid-imu-data">Invalid IMU Data</a></h3>
+<p><strong>Problem</strong>: IMU data looks incorrect or contains NaN values.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Calibrate IMU</strong>: Many IMUs need calibration after startup</li>
+<li><strong>Check Mounting</strong>: Ensure IMU is properly mounted and oriented</li>
+<li><strong>Verify Data Format</strong>: Ensure robot returns data in expected format:
+<pre><code>accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001
+</code></pre>
+</li>
+<li><strong>Temperature Issues</strong>: IMUs can be sensitive to temperature changes</li>
+</ol>
+<h2 id="mcp-client-issues"><a class="header" href="#mcp-client-issues">MCP Client Issues</a></h2>
+<h3 id="tools-not-appearing"><a class="header" href="#tools-not-appearing">Tools Not Appearing</a></h3>
+<p><strong>Problem</strong>: MCP client doesn’t show available robot tools.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Restart MCP Client</strong>: Sometimes clients need restart after configuration changes</li>
+<li><strong>Check Server Registration</strong>: Verify server is properly registered in client config</li>
+<li><strong>Verify Tool Registration</strong>: Ensure tools are properly defined with <code>#[tool]</code> macro</li>
+<li><strong>Check Client Logs</strong>: Look for tool discovery errors</li>
+</ol>
+<h3 id="tool-calls-failing"><a class="header" href="#tool-calls-failing">Tool Calls Failing</a></h3>
+<p><strong>Problem</strong>: Tool calls return errors or don’t execute.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Parameter Validation</strong>: Ensure parameters match expected schema</li>
+<li><strong>Check Error Messages</strong>: Look at specific error returned by tool</li>
+<li><strong>Verify Speed Ranges</strong>: Ensure speed parameters are between -1.0 and 1.0</li>
+<li><strong>Network Issues</strong>: Check if robot communication is working</li>
+</ol>
+<h2 id="configuration-issues"><a class="header" href="#configuration-issues">Configuration Issues</a></h2>
+<h3 id="wrong-robot-ip-address"><a class="header" href="#wrong-robot-ip-address">Wrong Robot IP Address</a></h3>
+<p><strong>Problem</strong>: Your robot uses a different IP address than <code>192.168.4.1</code>.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Find Robot IP</strong>: Use network scanning tools to find your robot</li>
+<li><strong>Update Server Code</strong>: Modify <code>ROVER_IP</code> constant in <code>src/main.rs</code>:
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const ROVER_IP: &amp;str = "192.168.1.100"; // Your robot's IP
+<span class="boring">}</span></code></pre></pre>
+</li>
+<li><strong>Rebuild Server</strong>: <code>cargo build --release</code></li>
+<li><strong>Update Client Config</strong>: Point to new executable</li>
+</ol>
+<h3 id="path-issues"><a class="header" href="#path-issues">Path Issues</a></h3>
+<p><strong>Problem</strong>: MCP client can’t find the executable.</p>
+<p><strong>Common Path Mistakes</strong>:</p>
+<ul>
+<li>Using relative paths: <code>./target/release/robot-mcp</code> ❌</li>
+<li>Missing executable name: <code>/path/to/project/</code> ❌</li>
+<li>Wrong filename: <code>/path/to/project/target/release/robot-command</code> ❌</li>
+</ul>
+<p><strong>Correct Path Format</strong>:</p>
+<pre><code class="language-json">{
+  "command": "/Users/username/projects/robot-command-mcp/target/release/robot-mcp"
+}
+</code></pre>
+<h2 id="performance-issues"><a class="header" href="#performance-issues">Performance Issues</a></h2>
+<h3 id="slow-response-times"><a class="header" href="#slow-response-times">Slow Response Times</a></h3>
+<p><strong>Problem</strong>: Robot commands take a long time to complete.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Network Latency</strong>: Check ping times to robot</li>
+<li><strong>Robot Processing</strong>: Some robots may be slow to process commands</li>
+<li><strong>IMU Reading</strong>: IMU data retrieval might be slow</li>
+<li><strong>HTTP Timeouts</strong>: Consider adjusting reqwest timeout settings</li>
+</ol>
+<h3 id="memory-usage"><a class="header" href="#memory-usage">Memory Usage</a></h3>
+<p><strong>Problem</strong>: Server uses too much memory.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Check for Memory Leaks</strong>: Monitor memory usage over time</li>
+<li><strong>Optimize Builds</strong>: Use <code>cargo build --release</code> for production</li>
+<li><strong>Profile Code</strong>: Use tools like <code>valgrind</code> or <code>heaptrack</code></li>
+</ol>
+<h2 id="debugging-tips"><a class="header" href="#debugging-tips">Debugging Tips</a></h2>
+<h3 id="enable-detailed-logging"><a class="header" href="#enable-detailed-logging">Enable Detailed Logging</a></h3>
+<p>The server uses <code>tracing</code> for logging. To see more details:</p>
+<pre><code class="language-bash">RUST_LOG=debug ./target/release/robot-mcp
+</code></pre>
+<h3 id="test-individual-components"><a class="header" href="#test-individual-components">Test Individual Components</a></h3>
+<ol>
+<li>
+<p><strong>Test Robot API</strong>:</p>
+<pre><code class="language-bash">curl -v "http://192.168.4.1/js?json={\"T\":126}"
+</code></pre>
+</li>
+<li>
+<p><strong>Test Server Locally</strong>:</p>
+<pre><code class="language-bash">echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | ./target/release/robot-mcp
+</code></pre>
+</li>
+</ol>
+<h3 id="check-dependencies"><a class="header" href="#check-dependencies">Check Dependencies</a></h3>
+<p>Ensure all required dependencies are available:</p>
+<pre><code class="language-bash">cargo tree
+cargo check
+</code></pre>
+<h2 id="getting-help-2"><a class="header" href="#getting-help-2">Getting Help</a></h2>
+<p>If you’re still experiencing issues:</p>
+<ol>
+<li><strong>Check GitHub Issues</strong>: Look for similar problems in the project repository</li>
+<li><strong>Create Detailed Report</strong>: Include error messages, configuration, and steps to reproduce</li>
+<li><strong>Provide Environment Info</strong>: OS, Rust version, robot model, etc.</li>
+<li><strong>Test Isolation</strong>: Try to isolate whether the issue is server, client, or robot related</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="faq"><a class="header" href="#faq">FAQ</a></h1>
+<h2 id="general-questions"><a class="header" href="#general-questions">General Questions</a></h2>
+<h3 id="q-what-is-llm-robot-commander"><a class="header" href="#q-what-is-llm-robot-commander">Q: What is LLM Robot Commander?</a></h3>
+<p><strong>A:</strong> LLM Robot Commander is a Rust-based server that implements the Model Context Protocol (MCP) to enable natural language control of robots. It acts as a bridge between LLM clients (like Claude) and robot hardware.</p>
+<h3 id="q-what-robots-are-supported"><a class="header" href="#q-what-robots-are-supported">Q: What robots are supported?</a></h3>
+<p><strong>A:</strong> Currently, the system supports any robot that:</p>
+<ul>
+<li>Has a network connection (WiFi/Ethernet)</li>
+<li>Accepts HTTP requests with JSON payloads</li>
+<li>Implements the expected command protocol (movement and IMU data)</li>
+</ul>
+<p>The default configuration expects robots at IP <code>192.168.4.1</code>, but this can be customized.</p>
+<h3 id="q-do-i-need-programming-experience-to-use-this"><a class="header" href="#q-do-i-need-programming-experience-to-use-this">Q: Do I need programming experience to use this?</a></h3>
+<p><strong>A:</strong> For basic usage, no programming is required. You simply:</p>
+<ol>
+<li>Build and configure the server</li>
+<li>Set up your MCP client</li>
+<li>Give natural language commands to your robot</li>
+</ol>
+<p>For customization and adding new features, Rust programming knowledge is helpful.</p>
+<h2 id="setup-and-installation"><a class="header" href="#setup-and-installation">Setup and Installation</a></h2>
+<h3 id="q-what-are-the-system-requirements"><a class="header" href="#q-what-are-the-system-requirements">Q: What are the system requirements?</a></h3>
+<p><strong>A:</strong> You need:</p>
+<ul>
+<li><strong>Rust toolchain</strong> (1.70+)</li>
+<li><strong>Network connection</strong> to your robot</li>
+<li><strong>MCP-compatible client</strong> (Claude Desktop, MLStudio, etc.)</li>
+<li><strong>Operating System</strong>: Windows, macOS, or Linux</li>
+</ul>
+<h3 id="q-how-do-i-install-rust"><a class="header" href="#q-how-do-i-install-rust">Q: How do I install Rust?</a></h3>
+<p><strong>A:</strong> Use rustup (recommended):</p>
+<pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+</code></pre>
+<h3 id="q-where-do-i-put-the-mcp-configuration"><a class="header" href="#q-where-do-i-put-the-mcp-configuration">Q: Where do I put the MCP configuration?</a></h3>
+<p><strong>A:</strong> For Claude Desktop:</p>
+<ul>
+<li><strong>macOS</strong>: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+<li><strong>Windows</strong>: <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+<li><strong>Linux</strong>: <code>~/.config/claude/claude_desktop_config.json</code></li>
+</ul>
+<h3 id="q-the-executable-path-in-my-configuration-doesnt-work-whats-wrong"><a class="header" href="#q-the-executable-path-in-my-configuration-doesnt-work-whats-wrong">Q: The executable path in my configuration doesn’t work. What’s wrong?</a></h3>
+<p><strong>A:</strong> Ensure you use the absolute path:</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "RobotCommandServer": {
+      "command": "/full/path/to/your/project/target/release/robot-mcp",
+      "args": []
+    }
+  }
+}
+</code></pre>
+<p>Common mistakes:</p>
+<ul>
+<li>Using relative paths like <code>./target/release/robot-mcp</code></li>
+<li>Missing the executable name</li>
+<li>Wrong file permissions</li>
+</ul>
+<h2 id="robot-communication-1"><a class="header" href="#robot-communication-1">Robot Communication</a></h2>
+<h3 id="q-my-robot-is-at-a-different-ip-address-how-do-i-change-it"><a class="header" href="#q-my-robot-is-at-a-different-ip-address-how-do-i-change-it">Q: My robot is at a different IP address. How do I change it?</a></h3>
+<p><strong>A:</strong> Edit the <code>ROVER_IP</code> constant in <code>src/main.rs</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const ROVER_IP: &amp;str = "192.168.1.100"; // Your robot's IP
+<span class="boring">}</span></code></pre></pre>
+<p>Then rebuild: <code>cargo build --release</code></p>
+<h3 id="q-what-if-my-robot-uses-a-different-protocol-than-http"><a class="header" href="#q-what-if-my-robot-uses-a-different-protocol-than-http">Q: What if my robot uses a different protocol than HTTP?</a></h3>
+<p><strong>A:</strong> You’ll need to modify the <code>command_to_robot</code> function in <code>src/main.rs</code> to support your robot’s protocol (TCP, UDP, Serial, etc.).</p>
+<h3 id="q-how-do-i-find-my-robots-ip-address"><a class="header" href="#q-how-do-i-find-my-robots-ip-address">Q: How do I find my robot’s IP address?</a></h3>
+<p><strong>A:</strong> Try these methods:</p>
+<ol>
+<li>Check robot’s display/web interface</li>
+<li>Use network scanning: <code>nmap -sn 192.168.1.0/24</code></li>
+<li>Check your router’s connected devices list</li>
+<li>Use the robot manufacturer’s app</li>
+</ol>
+<h3 id="q-the-robot-commands-work-but-imu-data-looks-wrong-what-should-i-check"><a class="header" href="#q-the-robot-commands-work-but-imu-data-looks-wrong-what-should-i-check">Q: The robot commands work but IMU data looks wrong. What should I check?</a></h3>
+<p><strong>A:</strong> Verify:</p>
+<ol>
+<li><strong>Data format</strong>: Should be <code>accel_x:0.12,accel_y:-0.05,accel_z:9.81,gyro_x:0.01,gyro_y:0.02,gyro_z:-0.001</code></li>
+<li><strong>IMU calibration</strong>: Many IMUs need calibration after power-on</li>
+<li><strong>Mounting orientation</strong>: IMU should be properly aligned with robot chassis</li>
+<li><strong>Units</strong>: Accelerometer in m/s², gyroscope in rad/s</li>
+</ol>
+<h2 id="mcp-and-client-issues"><a class="header" href="#mcp-and-client-issues">MCP and Client Issues</a></h2>
+<h3 id="q-how-do-i-know-if-the-mcp-server-is-working"><a class="header" href="#q-how-do-i-know-if-the-mcp-server-is-working">Q: How do I know if the MCP server is working?</a></h3>
+<p><strong>A:</strong> Check these indicators:</p>
+<ol>
+<li>Server starts without errors and shows “waiting for requests”</li>
+<li>MCP client shows the server as connected</li>
+<li>Robot tools appear in your client’s available tools</li>
+<li>You can successfully call tools</li>
+</ol>
+<h3 id="q-my-mcp-client-shows-connection-errors-what-should-i-check"><a class="header" href="#q-my-mcp-client-shows-connection-errors-what-should-i-check">Q: My MCP client shows connection errors. What should I check?</a></h3>
+<p><strong>A:</strong> Verify:</p>
+<ol>
+<li><strong>Executable path</strong>: Must be absolute and correct</li>
+<li><strong>File permissions</strong>: Executable should have execute permissions</li>
+<li><strong>Dependencies</strong>: All Rust dependencies are installed</li>
+<li><strong>Client logs</strong>: Check your MCP client’s error logs</li>
+</ol>
+<h3 id="q-tools-are-not-appearing-in-my-mcp-client-why"><a class="header" href="#q-tools-are-not-appearing-in-my-mcp-client-why">Q: Tools are not appearing in my MCP client. Why?</a></h3>
+<p><strong>A:</strong> This could be due to:</p>
+<ol>
+<li><strong>Server registration</strong>: Server might not be properly registered</li>
+<li><strong>Client restart</strong>: Some clients need restart after configuration changes</li>
+<li><strong>Tool compilation</strong>: Tools might not be compiled correctly</li>
+<li><strong>Protocol version</strong>: Ensure client and server use compatible MCP versions</li>
+</ol>
+<h3 id="q-what-llm-clients-are-supported"><a class="header" href="#q-what-llm-clients-are-supported">Q: What LLM clients are supported?</a></h3>
+<p><strong>A:</strong> Any client that supports the Model Context Protocol (MCP), including:</p>
+<ul>
+<li>Claude Desktop</li>
+<li>MLStudio</li>
+<li>Custom MCP implementations</li>
+<li>Any client following MCP 2024-11-05 specification</li>
+</ul>
+<h2 id="commands-and-usage"><a class="header" href="#commands-and-usage">Commands and Usage</a></h2>
+<h3 id="q-what-commands-can-i-give-to-the-robot"><a class="header" href="#q-what-commands-can-i-give-to-the-robot">Q: What commands can I give to the robot?</a></h3>
+<p><strong>A:</strong> Natural language examples:</p>
+<ul>
+<li>“Move forward slowly” → <code>move_forward</code> with low speed</li>
+<li>“Go backward at half speed” → <code>move_backward</code> with 0.5 speed</li>
+<li>“Stop the robot” → <code>stop</code> command</li>
+<li>“What’s the robot’s status?” → <code>stop</code> (returns IMU data)</li>
+</ul>
+<h3 id="q-how-does-the-system-interpret-speed-values"><a class="header" href="#q-how-does-the-system-interpret-speed-values">Q: How does the system interpret speed values?</a></h3>
+<p><strong>A:</strong> The LLM interprets natural language and converts it to numeric speeds:</p>
+<ul>
+<li>“slowly” → ~0.2-0.3</li>
+<li>“half speed” → ~0.5</li>
+<li>“quickly” or “fast” → ~0.8-1.0</li>
+<li>“full speed” → 1.0</li>
+</ul>
+<h3 id="q-can-i-control-multiple-robots"><a class="header" href="#q-can-i-control-multiple-robots">Q: Can I control multiple robots?</a></h3>
+<p><strong>A:</strong> Currently, the system supports one robot per server instance. For multiple robots, you could:</p>
+<ol>
+<li>Run multiple server instances with different IPs</li>
+<li>Modify the code to support robot selection</li>
+<li>Use a robot multiplexer</li>
+</ol>
+<h3 id="q-how-do-i-add-new-robot-capabilities"><a class="header" href="#q-how-do-i-add-new-robot-capabilities">Q: How do I add new robot capabilities?</a></h3>
+<p><strong>A:</strong> You can extend the system by:</p>
+<ol>
+<li>Defining new command structures</li>
+<li>Adding new MCP tools</li>
+<li>Updating the robot communication protocol</li>
+<li>See the <a href="contributing.html">Contributing Guide</a> for details</li>
+</ol>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h2>
+<h3 id="q-the-robot-says-robot-not-responding-what-does-this-mean"><a class="header" href="#q-the-robot-says-robot-not-responding-what-does-this-mean">Q: The robot says “Robot not responding”. What does this mean?</a></h3>
+<p><strong>A:</strong> This indicates network communication issues:</p>
+<ol>
+<li><strong>Check connection</strong>: <code>ping 192.168.4.1</code></li>
+<li><strong>Verify robot power</strong>: Ensure robot is on and ready</li>
+<li><strong>Test directly</strong>: <code>curl "http://192.168.4.1/js?json=%7B%22T%22%3A126%7D"</code></li>
+<li><strong>Check firewall</strong>: Ensure no blocking of HTTP traffic</li>
+</ol>
+<h3 id="q-commands-work-sometimes-but-fail-other-times-why"><a class="header" href="#q-commands-work-sometimes-but-fail-other-times-why">Q: Commands work sometimes but fail other times. Why?</a></h3>
+<p><strong>A:</strong> Intermittent failures usually indicate:</p>
+<ol>
+<li><strong>Poor WiFi signal</strong>: Move robot closer to router</li>
+<li><strong>Network congestion</strong>: Try during off-peak hours</li>
+<li><strong>Robot processing issues</strong>: Robot may be overloaded</li>
+<li><strong>Power issues</strong>: Low battery can cause instability</li>
+</ol>
+<h3 id="q-how-do-i-enable-debug-logging"><a class="header" href="#q-how-do-i-enable-debug-logging">Q: How do I enable debug logging?</a></h3>
+<p><strong>A:</strong> Set the environment variable:</p>
+<pre><code class="language-bash">RUST_LOG=debug ./target/release/robot-mcp
+</code></pre>
+<h3 id="q-the-server-builds-but-wont-start-what-should-i-check"><a class="header" href="#q-the-server-builds-but-wont-start-what-should-i-check">Q: The server builds but won’t start. What should I check?</a></h3>
+<p><strong>A:</strong> Common issues:</p>
+<ol>
+<li><strong>Missing dependencies</strong>: Run <code>cargo build --release</code> again</li>
+<li><strong>File permissions</strong>: <code>chmod +x target/release/robot-mcp</code></li>
+<li><strong>Port conflicts</strong>: Check if another service is using the same resources</li>
+<li><strong>Rust version</strong>: Ensure you have Rust 1.70+</li>
+</ol>
+<h2 id="performance-and-limitations"><a class="header" href="#performance-and-limitations">Performance and Limitations</a></h2>
+<h3 id="q-how-fast-can-i-send-commands"><a class="header" href="#q-how-fast-can-i-send-commands">Q: How fast can I send commands?</a></h3>
+<p><strong>A:</strong> The system can handle multiple commands per second, but consider:</p>
+<ol>
+<li><strong>Robot processing time</strong>: Physical robots need time to execute commands</li>
+<li><strong>Network latency</strong>: WiFi adds delay</li>
+<li><strong>Safety</strong>: Rapid commands might be unsafe for the robot</li>
+</ol>
+<h3 id="q-are-there-any-security-concerns"><a class="header" href="#q-are-there-any-security-concerns">Q: Are there any security concerns?</a></h3>
+<p><strong>A:</strong> Current considerations:</p>
+<ol>
+<li><strong>Local network</strong>: System assumes trusted local network</li>
+<li><strong>No authentication</strong>: Robot API has no built-in security</li>
+<li><strong>HTTP</strong>: Uses unencrypted HTTP (fine for local networks)</li>
+<li><strong>Access control</strong>: Any device on network can control robot</li>
+</ol>
+<h3 id="q-can-this-work-over-the-internet"><a class="header" href="#q-can-this-work-over-the-internet">Q: Can this work over the internet?</a></h3>
+<p><strong>A:</strong> Not recommended without modifications:</p>
+<ol>
+<li><strong>Security</strong>: No authentication or encryption</li>
+<li><strong>Latency</strong>: Internet delays affect real-time control</li>
+<li><strong>Firewall</strong>: Most home networks block incoming connections</li>
+<li><strong>Safety</strong>: Remote robot control raises safety concerns</li>
+</ol>
+<h2 id="development-and-customization"><a class="header" href="#development-and-customization">Development and Customization</a></h2>
+<h3 id="q-how-do-i-modify-the-system-for-my-specific-robot"><a class="header" href="#q-how-do-i-modify-the-system-for-my-specific-robot">Q: How do I modify the system for my specific robot?</a></h3>
+<p><strong>A:</strong> Key areas to customize:</p>
+<ol>
+<li><strong>IP address</strong>: Change <code>ROVER_IP</code> constant</li>
+<li><strong>Command format</strong>: Modify command structures</li>
+<li><strong>Protocol</strong>: Update <code>command_to_robot</code> function</li>
+<li><strong>New tools</strong>: Add tools for robot-specific features</li>
+</ol>
+<h3 id="q-can-i-use-this-with-arduinoraspberry-pi-robots"><a class="header" href="#q-can-i-use-this-with-arduinoraspberry-pi-robots">Q: Can I use this with Arduino/Raspberry Pi robots?</a></h3>
+<p><strong>A:</strong> Yes! Your robot just needs:</p>
+<ol>
+<li><strong>HTTP server</strong>: Simple web server on port 80</li>
+<li><strong>JSON parsing</strong>: Parse the command JSON</li>
+<li><strong>Motor control</strong>: Execute movement commands</li>
+<li><strong>Sensor reading</strong>: Return IMU data in expected format</li>
+</ol>
+<h3 id="q-how-do-i-contribute-to-the-project"><a class="header" href="#q-how-do-i-contribute-to-the-project">Q: How do I contribute to the project?</a></h3>
+<p><strong>A:</strong> See the <a href="contributing.html">Contributing Guide</a> for:</p>
+<ol>
+<li><strong>Development setup</strong></li>
+<li><strong>Code style guidelines</strong></li>
+<li><strong>Submission process</strong></li>
+<li><strong>Testing requirements</strong></li>
+</ol>
+<h2 id="getting-help-3"><a class="header" href="#getting-help-3">Getting Help</a></h2>
+<h3 id="q-where-can-i-get-help-if-im-stuck"><a class="header" href="#q-where-can-i-get-help-if-im-stuck">Q: Where can I get help if I’m stuck?</a></h3>
+<p><strong>A:</strong> Resources:</p>
+<ol>
+<li><strong>Documentation</strong>: This mdbook covers most scenarios</li>
+<li><strong>GitHub Issues</strong>: Report bugs or ask questions</li>
+<li><strong>Code Examples</strong>: Check the source code for examples</li>
+<li><strong>Community</strong>: Join project discussions if available</li>
+</ol>
+<h3 id="q-how-do-i-report-a-bug"><a class="header" href="#q-how-do-i-report-a-bug">Q: How do I report a bug?</a></h3>
+<p><strong>A:</strong> When reporting issues, include:</p>
+<ol>
+<li><strong>Error messages</strong>: Copy exact error text</li>
+<li><strong>Configuration</strong>: Your MCP client config</li>
+<li><strong>Environment</strong>: OS, Rust version, robot model</li>
+<li><strong>Steps</strong>: How to reproduce the issue</li>
+<li><strong>Logs</strong>: Debug output if available</li>
+</ol>
+<h3 id="q-is-commercial-use-allowed"><a class="header" href="#q-is-commercial-use-allowed">Q: Is commercial use allowed?</a></h3>
+<p><strong>A:</strong> Check the project’s LICENSE file for specific terms. Most open-source projects allow commercial use under certain conditions.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
